@@ -1,7 +1,27 @@
 #include "pch.h"
+#include "GestorMenu.h"
 
 using namespace System;
 
-int main(array<System::String ^> ^args){
-    return 0;
+void main(){
+    int opcion;
+
+    do {
+        opcion = GestorMenus::menuPrincipal();
+
+        switch (opcion) {
+        case 1:
+            cout << "Login...\n";
+            break;
+        case 2:
+            cout << "Registro...\n";
+            break;
+        case 0:
+            cout << "Saliendo...\n";
+            break;
+        }
+
+    } while (opcion != 0);
+
+    
 }
