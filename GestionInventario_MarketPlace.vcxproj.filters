@@ -83,6 +83,27 @@
     <ClInclude Include="VendedorUI.h">
       <Filter>UI</Filter>
     </ClInclude>
+    <ClInclude Include="Auth.h">
+      <Filter>auth</Filter>
+    </ClInclude>
+    <ClInclude Include="IniciarSesion.h">
+      <Filter>auth</Filter>
+    </ClInclude>
+    <ClInclude Include="Registrar.h">
+      <Filter>auth</Filter>
+    </ClInclude>
+    <ClInclude Include="UserBuilder.h">
+      <Filter>builders</Filter>
+    </ClInclude>
+    <ClInclude Include="ClienteBuilder.h">
+      <Filter>builders</Filter>
+    </ClInclude>
+    <ClInclude Include="VendedoresBuilder.h">
+      <Filter>builders</Filter>
+    </ClInclude>
+    <ClInclude Include="UserRepository.h">
+      <Filter>service</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GestionInventario_MarketPlace.cpp">

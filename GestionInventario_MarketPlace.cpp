@@ -1,10 +1,11 @@
 #include "pch.h"
 #include "GestorMenu.h"
+#include "AuthUI.h"
 
 using namespace System;
 
-void main(){
-    int opcion;
+void main() {
+    /*int opcion;
 
     do {
         opcion = GestorMenus::menuPrincipal();
@@ -21,7 +22,7 @@ void main(){
             break;
         }
 
-    } while (opcion != 0);
+    } while (opcion != 0);*/
+    AuthUI::Render();
 
-    
 }
