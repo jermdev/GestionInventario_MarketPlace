@@ -1,35 +1,42 @@
 #pragma once
-#include <iostream>
+#include <string>
 using namespace std;
 
 class Usuario {
-private:
-	int id;
-	string nombre;
-	string correo;
-	string direccion;
-	string contrase�a;
+protected:
+    int    id;
+    string nombre;
+    string correo;
+    string direccion;
+    string contraseniaHash;
+
 public:
-	Usuario() {
+    Usuario()
+        : id(0), nombre(""), correo(""), direccion(""), contraseniaHash("")
+    {}
 
+    virtual ~Usuario() {}
 
-	}
+    // Metodos virtuales puros — hacen a Usuario abstracto.
+    // Cada subclase declara su tipo y un ID numerico para serializar/discriminar.
+    virtual string getTipoUsuario() const = 0;
+    virtual int    getTipoId()      const = 0;
 
-	~Usuario()
-	{
-	}
+    // Getters
+    int    getId()              const { return id; }
+    string getNombre()          const { return nombre; }
+    string getCorreo()          const { return correo; }
+    string getDireccion()       const { return direccion; }
+    string getContraseniaHash() const { return contraseniaHash; }
 
-	void actualizarContraseña(string newContrase�a) { this->contrase�a = contrase�a; }
+    // Setters
+    void setId(int id)                         { this->id = id; }
+    void setNombre(const string& nombre)       { this->nombre = nombre; }
+    void setCorreo(const string& correo)       { this->correo = correo; }
+    void setDireccion(const string& direccion) { this->direccion = direccion; }
+    void setContraseniaHash(const string& hash){ this->contraseniaHash = hash; }
 
-	int getId() { return this->id; }
-	string getNombre() { return this->nombre; }
-	string getCorreo() { return this->correo; }
-	string getDireccion() { return this->direccion; }
-	string getContrase�a() { return this->contrase�a; }
-
-	void setId(int id) { this->id = id; }
-	void setNombre(string nombre) { this->nombre = nombre; }
-	void setCorreo(string correo) { this->correo = correo; }
-	void setDireccion(string direccion) { this->direccion = direccion; }
-	void setContrase�a(string contrase�a) { this->contrase�a = contrase�a; }
+    void actualizarContrasenia(const string& nuevoHash) {
+        this->contraseniaHash = nuevoHash;
+    }
 };

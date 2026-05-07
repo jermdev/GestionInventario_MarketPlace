@@ -1,5 +1,5 @@
 #pragma once
-#include "Pila.h"
+#include "Lista.h"
 #include "Producto.h"
 struct NProductos {
 	Producto* producto;
@@ -14,14 +14,15 @@ private:
 public:
 
 	Carrito() {
-
+		this->productos = new Lista<NProductos*>();
 		this->numeroProductos = 0;
 		this->precioDelCarrito = 0;
-
 	}
 
 	~Carrito() {
+		delete productos;
 	}
+
 
 	void listarCarrito() {
 		int nProductos = productos->longitud();

@@ -124,6 +124,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Auth.h" />
+    <ClInclude Include="GestorDeArchivos.h" />
+    <ClInclude Include="HashUtils.h" />
     <ClInclude Include="AuthUI.h" />
     <ClInclude Include="Carrito.h" />
     <ClInclude Include="Cliente.h" />
