@@ -1,4 +1,5 @@
 #pragma once
+#include <string>
 #include "UserRepository.h"
 #include "HashUtils.h"
 #include "ClienteBuilder.h"
@@ -10,7 +11,13 @@ using namespace std;
 // Auth NO es dueno del repositorio (inyectado por constructor).
 // Auth SI es dueno de usuarioActual (lo recibe de buscarPorCorreo y lo destruye).
 class Auth {
+ 
+private:
+    UsuarioRepository* repo;
+    Usuario* usuarioActual;
+
 public:
+
     enum ResultadoRegistro {
         REGISTRO_EXITOSO,
         CORREO_DUPLICADO,
@@ -23,11 +30,6 @@ public:
         LOGIN_ERROR
     };
 
-private:
-    UsuarioRepository* repo;
-    Usuario*           usuarioActual;
-
-public:
     explicit Auth(UsuarioRepository* repo)
         : repo(repo), usuarioActual(nullptr)
     {}
@@ -40,23 +42,20 @@ public:
         // repo NO se destruye aqui — el caller (main) es dueno del repo
     }
 
-    ResultadoRegistro registrarCliente(const string& nombre,
-                                       const string& correo,
-                                       const string& direccion,
-                                       const string& contrasenia) {
+    ResultadoRegistro registrarCliente(string nombre,string correo,string direccion,string contrasenia) {
         if (repo->correoExiste(correo))
             return CORREO_DUPLICADO;
 
         int    nuevoId = repo->generarNuevoId();
-        string hash    = HashUtils::hashear(contrasenia);
 
         ClienteBuilder b;
-        Usuario* u = b.setId(nuevoId)
-                      .setNombre(nombre)
-                      .setCorreo(correo)
-                      .setDireccion(direccion)
-                      .setContraseniaHash(hash)
-                      .build();
+        Usuario* u = nullptr;
+        b.setId(nuevoId);
+        b.setNombre(nombre);
+        b.setCorreo(correo);
+        b.setDireccion(direccion);
+        b.setContrasenia(contrasenia);
+        u = b.build();
 
         Cliente* c = dynamic_cast<Cliente*>(u);
         if (c == nullptr) { delete u; return REGISTRO_ERROR; }
@@ -66,24 +65,21 @@ public:
         return REGISTRO_EXITOSO;
     }
 
-    ResultadoRegistro registrarVendedor(const string& nombre,
-                                        const string& correo,
-                                        const string& direccion,
-                                        const string& contrasenia) {
+    ResultadoRegistro registrarVendedor(string nombre,string correo,string direccion,string contrasenia) {
         if (repo->correoExiste(correo))
             return CORREO_DUPLICADO;
 
-        int    nuevoId = repo->generarNuevoId();
-        string hash    = HashUtils::hashear(contrasenia);
+        int nuevoId = repo->generarNuevoId();
 
         VendedorBuilder b;
         b.setNumeroEstrellas(0);
-        Usuario* u = b.setId(nuevoId)
-                      .setNombre(nombre)
-                      .setCorreo(correo)
-                      .setDireccion(direccion)
-                      .setContraseniaHash(hash)
-                      .build();
+        Usuario* u = nullptr;
+        b.setId(nuevoId);
+        b.setNombre(nombre);
+        b.setCorreo(correo);
+        b.setDireccion(direccion);
+        b.setContrasenia(contrasenia);
+        u = b.build();
 
         Vendedor* v = dynamic_cast<Vendedor*>(u);
         if (v == nullptr) { delete u; return REGISTRO_ERROR; }
@@ -104,8 +100,8 @@ public:
         if (u == nullptr)
             return CREDENCIALES_INVALIDAS;
 
-        string hashIngresado = HashUtils::hashear(contrasenia);
-        if (hashIngresado != u->getContraseniaHash()) {
+        //string hashIngresado = HashUtils::hashear(contrasenia);
+        if (contrasenia != u->getContrasenia()) {
             delete u;
             return CREDENCIALES_INVALIDAS;
         }
@@ -122,5 +118,5 @@ public:
     }
 
     Usuario* getUsuarioActual() const { return usuarioActual; }
-    bool     hayUsuarioActivo() const { return usuarioActual != nullptr; }
+    bool hayUsuarioActivo() const { return usuarioActual != nullptr; }
 };

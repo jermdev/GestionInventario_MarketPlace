@@ -8,11 +8,11 @@ protected:
     string nombre;
     string correo;
     string direccion;
-    string contraseniaHash;
+    string contrasenia;
 
 public:
     Usuario()
-        : id(0), nombre(""), correo(""), direccion(""), contraseniaHash("")
+        : id(0), nombre(""), correo(""), direccion(""), contrasenia("")
     {}
 
     virtual ~Usuario() {}
@@ -20,23 +20,23 @@ public:
     // Metodos virtuales puros — hacen a Usuario abstracto.
     // Cada subclase declara su tipo y un ID numerico para serializar/discriminar.
     virtual string getTipoUsuario() const = 0;
-    virtual int    getTipoId()      const = 0;
+    virtual int getTipoId() const = 0;
 
     // Getters
-    int    getId()              const { return id; }
-    string getNombre()          const { return nombre; }
-    string getCorreo()          const { return correo; }
-    string getDireccion()       const { return direccion; }
-    string getContraseniaHash() const { return contraseniaHash; }
+    int getId() { return id; }
+    string getNombre( ){ return nombre; }
+    string getCorreo(){ return correo; }
+    string getDireccion() { return direccion; }
+    string getContrasenia() { return contrasenia; }
 
     // Setters
     void setId(int id)                         { this->id = id; }
-    void setNombre(const string& nombre)       { this->nombre = nombre; }
-    void setCorreo(const string& correo)       { this->correo = correo; }
-    void setDireccion(const string& direccion) { this->direccion = direccion; }
-    void setContraseniaHash(const string& hash){ this->contraseniaHash = hash; }
+    void setNombre(string nombre) { this->nombre = nombre; }
+    void setCorreo(string correo) { this->correo = correo; }
+    void setDireccion(string direccion) { this->direccion = direccion; }
+    void setContrasenia(string contrasenia) { this->contrasenia = contrasenia; }
 
-    void actualizarContrasenia(const string& nuevoHash) {
-        this->contraseniaHash = nuevoHash;
+    void actualizarContrasenia(const string contrasenia) {
+        this->contrasenia = contrasenia;
     }
 };

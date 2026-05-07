@@ -32,7 +32,7 @@ public:
                         ClienteUI::Render();
                     else
                         VendedorUI::Render();
-                    auth->cerrarSesion();
+                    //auth->cerrarSesion();
                 }
                 break;
             }

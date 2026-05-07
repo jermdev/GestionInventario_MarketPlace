@@ -12,44 +12,39 @@ protected:
     string nombre;
     string correo;
     string direccion;
-    string contraseniaHash;
+    string contrasenia;
 
 public:
     UsuarioBuilder()
-        : id(0), nombre(""), correo(""), direccion(""), contraseniaHash("")
+        : id(0), nombre(""), correo(""), direccion(""), contrasenia("")
     {}
 
     virtual ~UsuarioBuilder() {}
 
-    UsuarioBuilder& setId(int id) {
+    void setId(int id) {
         this->id = id;
-        return *this;
     }
 
-    UsuarioBuilder& setNombre(const string& nombre) {
+    void setNombre(const string& nombre) {
         this->nombre = nombre;
-        return *this;
     }
 
-    UsuarioBuilder& setCorreo(const string& correo) {
+    void setCorreo(const string& correo) {
         this->correo = correo;
-        return *this;
     }
 
-    UsuarioBuilder& setDireccion(const string& direccion) {
+    void setDireccion(const string& direccion) {
         this->direccion = direccion;
-        return *this;
     }
 
-    UsuarioBuilder& setContraseniaHash(const string& hash) {
-        this->contraseniaHash = hash;
-        return *this;
+    void setContrasenia(const string& contrasenia) {
+        this->contrasenia = contrasenia;
     }
 
     // Limpia todos los campos acumulados para reusar el builder.
     void reset() {
         id = 0;
-        nombre = correo = direccion = contraseniaHash = "";
+        nombre = correo = direccion = contrasenia = "";
     }
 
     // Construye el objeto Usuario concreto. El CALLER es dueno del puntero devuelto.

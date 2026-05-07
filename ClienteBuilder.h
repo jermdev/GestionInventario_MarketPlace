@@ -20,7 +20,7 @@ public:
         c->setNombre(nombre);
         c->setCorreo(correo);
         c->setDireccion(direccion);
-        c->setContraseniaHash(contraseniaHash);
+        c->setContrasenia(contrasenia);
         reset();
         return c;
     }

@@ -52,32 +52,33 @@ private:
             archivo.read(reinterpret_cast<char*>(&id), sizeof(int));
             if (archivo.fail() || archivo.eof()) break;
 
-            string nombre    = leerString(archivo);
-            string correo    = leerString(archivo);
+            string nombre = leerString(archivo);
+            string correo = leerString(archivo);
             string direccion = leerString(archivo);
-            string hashStr   = leerString(archivo);
-            int    extra     = 0;
+            string contrasenia = leerString(archivo);
+            int extra = 0;
             archivo.read(reinterpret_cast<char*>(&extra), sizeof(int));
             if (archivo.fail()) break;
 
             Usuario* u = nullptr;
             if (esCliente) {
                 ClienteBuilder b;
-                u = b.setId(id)
-                     .setNombre(nombre)
-                     .setCorreo(correo)
-                     .setDireccion(direccion)
-                     .setContraseniaHash(hashStr)
-                     .build();
+                
+                b.setId(id);
+                b.setNombre(nombre);
+                b.setCorreo(correo);
+                b.setDireccion(direccion);
+                b.setContrasenia(contrasenia);
+                u = b.build();
             } else {
                 VendedorBuilder b;
                 b.setNumeroEstrellas(extra);
-                u = b.setId(id)
-                     .setNombre(nombre)
-                     .setCorreo(correo)
-                     .setDireccion(direccion)
-                     .setContraseniaHash(hashStr)
-                     .build();
+                b.setId(id);
+                b.setNombre(nombre);
+                b.setCorreo(correo);
+                b.setDireccion(direccion);
+                b.setContrasenia(contrasenia);
+                u = b.build();
             }
             if (u != nullptr)
                 lista->agregaFinal(u);
@@ -101,7 +102,7 @@ public:
         escribirString(archivo, cliente->getNombre());
         escribirString(archivo, cliente->getCorreo());
         escribirString(archivo, cliente->getDireccion());
-        escribirString(archivo, cliente->getContraseniaHash());
+        escribirString(archivo, cliente->getContrasenia());
         int extra = cliente->getNumeroCompras();
         archivo.write(reinterpret_cast<const char*>(&extra), sizeof(int));
     }
@@ -114,7 +115,7 @@ public:
         escribirString(archivo, vendedor->getNombre());
         escribirString(archivo, vendedor->getCorreo());
         escribirString(archivo, vendedor->getDireccion());
-        escribirString(archivo, vendedor->getContraseniaHash());
+        escribirString(archivo, vendedor->getContrasenia());
         int extra = vendedor->getNumeroEstrellas();
         archivo.write(reinterpret_cast<const char*>(&extra), sizeof(int));
     }
@@ -123,38 +124,44 @@ public:
     // Retorna puntero heap-allocated — el CALLER es dueno y debe hacer delete.
     // Retorna nullptr si no se encuentra.
     Usuario* buscarPorCorreo(const string& correo) {
-        Lista<Usuario*>* clientes = cargarDesdeArchivo(rutaClientes, true);
+       Lista<Usuario*>* clientes = cargarDesdeArchivo(rutaClientes, true);
+
+        Usuario* encontrado = nullptr;
+
         for (uint i = 0; i < clientes->longitud(); i++) {
             Usuario* u = clientes->obtenerPos(i);
+
             if (u != nullptr && u->getCorreo() == correo) {
-                // Liberar todos los demas usuarios cargados
-                for (uint j = 0; j < clientes->longitud(); j++) {
-                    if (j != i) delete clientes->obtenerPos(j);
-                }
-                delete clientes;
-                return u;
+                encontrado = u;
+            }
+            else {
+                delete u;
             }
         }
-        for (uint i = 0; i < clientes->longitud(); i++)
-            delete clientes->obtenerPos(i);
+
         delete clientes;
 
+        if (encontrado != nullptr) {
+            return encontrado;
+            }
+
+    // ===== VENDEDORES =====
         Lista<Usuario*>* vendedores = cargarDesdeArchivo(rutaVendedores, false);
+
         for (uint i = 0; i < vendedores->longitud(); i++) {
             Usuario* u = vendedores->obtenerPos(i);
+
             if (u != nullptr && u->getCorreo() == correo) {
-                for (uint j = 0; j < vendedores->longitud(); j++) {
-                    if (j != i) delete vendedores->obtenerPos(j);
-                }
-                delete vendedores;
-                return u;
+                encontrado = u;
+            }
+            else {
+                delete u;
             }
         }
-        for (uint i = 0; i < vendedores->longitud(); i++)
-            delete vendedores->obtenerPos(i);
+
         delete vendedores;
 
-        return nullptr;
+        return encontrado;
     }
 
     // Carga todos los usuarios de ambos archivos en una sola lista.

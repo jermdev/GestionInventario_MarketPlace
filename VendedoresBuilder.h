@@ -30,7 +30,7 @@ public:
         v->setNombre(nombre);
         v->setCorreo(correo);
         v->setDireccion(direccion);
-        v->setContraseniaHash(contraseniaHash);
+        v->setContrasenia(contrasenia);
         reset();
         numeroEstrellas = 0;
         return v;

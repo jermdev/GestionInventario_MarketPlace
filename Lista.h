@@ -52,9 +52,8 @@ struct Lista<T, NADA>::Nodo {
 
 template <typename T, T NADA>
 Lista<T, NADA>::~Lista() {
-    Nodo* aux = ini; //copia la informaci�n del nodo ini,
-    while (aux != nullptr) {
-        aux = ini;
+    while (ini != nullptr) {
+        Nodo* aux = ini;
         ini = ini->sig;
         delete aux;
     }
