@@ -123,12 +123,17 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Auth.h" />
+    <ClInclude Include="GestorDeArchivos.h" />
+    <ClInclude Include="HashUtils.h" />
     <ClInclude Include="AuthUI.h" />
     <ClInclude Include="Carrito.h" />
     <ClInclude Include="Cliente.h" />
+    <ClInclude Include="ClienteBuilder.h" />
     <ClInclude Include="ClienteUI.h" />
     <ClInclude Include="Comprobante.h" />
     <ClInclude Include="GestorMenu.h" />
+    <ClInclude Include="IniciarSesion.h" />
     <ClInclude Include="Lista.h" />
     <ClInclude Include="Nodo.h" />
     <ClInclude Include="Pago.h" />
@@ -136,9 +141,13 @@
     <ClInclude Include="Pedido.h" />
     <ClInclude Include="Pila.h" />
     <ClInclude Include="Producto.h" />
+    <ClInclude Include="Registrar.h" />
     <ClInclude Include="Resource.h" />
+    <ClInclude Include="UserBuilder.h" />
+    <ClInclude Include="UserRepository.h" />
     <ClInclude Include="Usuario.h" />
     <ClInclude Include="Vendedor.h" />
+    <ClInclude Include="VendedoresBuilder.h" />
     <ClInclude Include="VendedorUI.h" />
   </ItemGroup>
   <ItemGroup>

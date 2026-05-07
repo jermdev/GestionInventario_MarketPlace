@@ -1,33 +1,45 @@
 #pragma once
+#include <iostream>
 #include "Usuario.h"
-#include "Producto.h"
 #include "Lista.h"
+#include "Producto.h"
+using namespace std;
 
 class Vendedor : public Usuario {
 private:
-	Lista<Producto*>* productosEnVenta;
-	int numeroEstrellas;
+    Lista<Producto*>* productosEnVenta;
+    int               numeroEstrellas;
 
 public:
-	Vendedor(Lista<Producto*>* prodcutosEnVenta, int numeroEstrellas) : Usuario() {
+    // Constructor completo
+    Vendedor(Lista<Producto*>* productosEnVenta, int numeroEstrellas)
+        : productosEnVenta(productosEnVenta), numeroEstrellas(numeroEstrellas)
+    {}
 
-		this->productosEnVenta = prodcutosEnVenta;
-		this->numeroEstrellas = numeroEstrellas;
-	}
+    // Constructor por defecto (necesario para deserializacion desde archivo)
+    Vendedor()
+        : productosEnVenta(new Lista<Producto*>()), numeroEstrellas(0)
+    {}
 
-	~Vendedor() {
-	}
+    ~Vendedor() {
+        delete productosEnVenta;
+    }
 
-	void listarPedidos() {
-		int nProductos = productosEnVenta->longitud();
-		cout << "Tus Productos de Venta \n";
-		cout << "N° " << nProductos << "\n";
+    string getTipoUsuario() const override { return "Vendedor"; }
+    int    getTipoId()      const override { return 2; }
 
-		Producto* aux = productosEnVenta->obtenerInicial();
-		for (int i = 0; i < nProductos; i++) {
-			aux->MostrarProducto();
-			aux = productosEnVenta->obtenerPos(i);
-		}
+    int               getNumeroEstrellas()              const { return numeroEstrellas; }
+    void              setNumeroEstrellas(int estrellas)       { this->numeroEstrellas = estrellas; }
+    Lista<Producto*>* getProductosEnVenta()                   { return productosEnVenta; }
 
-	}
+    void listarProductos() {
+        int nProductos = productosEnVenta->longitud();
+        cout << "Tus Productos de Venta\n";
+        cout << "N: " << nProductos << "\n";
+        for (int i = 0; i < nProductos; i++) {
+            Producto* p = productosEnVenta->obtenerPos(i);
+            if (p == nullptr) return;
+            p->MostrarProducto();
+        }
+    }
 };
