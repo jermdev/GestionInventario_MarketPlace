@@ -41,6 +41,48 @@
     <ClInclude Include="GestorMenu.h">
       <Filter>UI</Filter>
     </ClInclude>
+    <ClInclude Include="Cliente.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="Usuario.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="Vendedor.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="Pago.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="Carrito.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="Producto.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="Comprobante.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="Pedido.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="Lista.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Nodo.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Pila.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="AuthUI.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="ClienteUI.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="VendedorUI.h">
+      <Filter>UI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GestionInventario_MarketPlace.cpp">
