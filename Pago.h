@@ -5,7 +5,8 @@ using namespace std;
 
 enum MetodoPago {
 	TARJETADEREGALO,
-	TARJETA
+	TARJETA 
+
 };
 
 class Pago {
