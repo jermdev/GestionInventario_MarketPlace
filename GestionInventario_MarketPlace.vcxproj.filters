@@ -104,6 +104,18 @@
     <ClInclude Include="UserRepository.h">
       <Filter>service</Filter>
     </ClInclude>
+    <ClInclude Include="GestorDeArchivos.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="HashUtils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CompraService.h">
+      <Filter>service</Filter>
+    </ClInclude>
+    <ClInclude Include="ProductoService.h">
+      <Filter>service</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GestionInventario_MarketPlace.cpp">

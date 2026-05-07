@@ -1,7 +1,6 @@
 #pragma once
 #include <string>
 #include "UserRepository.h"
-#include "HashUtils.h"
 #include "ClienteBuilder.h"
 #include "VendedoresBuilder.h"
 #include "Usuario.h"
