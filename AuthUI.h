@@ -27,7 +27,7 @@ public:
             case 1: {
                 bool ok = IniciarSesion::Render(auth);
                 if (ok && auth->hayUsuarioActivo()) {
-                    int tipo = auth->getUsuarioActual()->getId();
+                    int tipo = auth->getUsuarioActual()->getTipoId();
                     if (tipo == 1)
                         ClienteUI::Render();
                     else
