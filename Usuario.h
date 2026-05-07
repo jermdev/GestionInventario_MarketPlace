@@ -3,12 +3,12 @@
 using namespace std;
 
 class Usuario {
-private:
+protected:
 	int id;
 	string nombre;
 	string correo;
 	string direccion;
-	string contrase�a;
+	string contrasenia;
 public:
 	Usuario() {
 
@@ -19,17 +19,17 @@ public:
 	{
 	}
 
-	void actualizarContraseña(string newContrase�a) { this->contrase�a = contrase�a; }
+	void actualizarContrasenia(string newContrasenia) { this->contrasenia = contrasenia; }
 
 	int getId() { return this->id; }
 	string getNombre() { return this->nombre; }
 	string getCorreo() { return this->correo; }
 	string getDireccion() { return this->direccion; }
-	string getContrase�a() { return this->contrase�a; }
+	string getContrasenia() { return this->contrasenia; }
 
 	void setId(int id) { this->id = id; }
 	void setNombre(string nombre) { this->nombre = nombre; }
 	void setCorreo(string correo) { this->correo = correo; }
 	void setDireccion(string direccion) { this->direccion = direccion; }
-	void setContrase�a(string contrase�a) { this->contrase�a = contrase�a; }
+	void setContrasenia(string contrasenia) { this->contrasenia = contrasenia; }
 };
