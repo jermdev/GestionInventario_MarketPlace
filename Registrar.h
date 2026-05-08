@@ -40,7 +40,10 @@ public:
         getline(cin, direccion);
 
         cout << "Contrasenia: ";
+        cout << "\x1b[30m";
+        // \x1b[0m es el codigo ANSI que resetea la consola a sus colores originales.
         cin >> contrasenia;
+        cout << "\x1b[0m";
 
         Auth::ResultadoRegistro resultado;
         if (tipo == 1)
