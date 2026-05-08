@@ -35,6 +35,9 @@ public:
 
 	EstadoPedido getEstadoPedido() { return estadopedido; }
 
+	double getPeso() { return peso; }
+	Lista<Producto*>* getProductosComprados() { return productosComprados; }
+
 	void setEstadoPedido(EstadoPedido nuevoEstado) {
 		this->estadopedido = nuevoEstado;
 	}
