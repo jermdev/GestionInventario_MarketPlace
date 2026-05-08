@@ -1,107 +1,306 @@
 #pragma once
-#include <fstream>
 #include <string>
+#include <vector>
+#include <fstream>
+#include <sstream>
+
 using namespace std;
 
-// GestorDeArchivos<T> — utilitario de I/O binario para tipos POD.
-// IMPORTANTE: No usar directamente con clases que contengan std::string u otros
-// miembros no-POD (como Usuario, Cliente, Vendedor). Para esos casos, usar
-// UsuarioRepository, que implementa serializacion length-prefixed propia.
-template <typename T>
 class GestorDeArchivos {
-private:
-    string ruta;
-
 public:
-    explicit GestorDeArchivos(const string& ruta) : ruta(ruta) {}
+    // Constructor
+    GestorDeArchivos() {
+    }
 
-    // Guarda un elemento POD. append=true agrega al final del archivo.
-    bool guardar(const T& dato, bool append = true) {
-        ios::openmode modo = ios::binary | ios::out;
-        if (append) modo |= ios::app;
-        ofstream archivo(ruta, modo);
-        if (!archivo.is_open()) return false;
-        archivo.write(reinterpret_cast<const char*>(&dato), sizeof(T));
+    // ===== GUARDAR archivos de TEXTO (una linea) =====
+    void guardar(string nombreArchivo, vector<int> datos, char delimitador) {
+        ofstream archivo(nombreArchivo);
+        if (archivo.is_open()) {
+            for (int i = 0; i < datos.size(); i++) {
+                archivo << datos[i];
+                if (i < datos.size() - 1) {
+                    archivo << delimitador;
+                }
+            }
+            archivo.close();
+        }
+    }
+
+    void guardar(string nombreArchivo, vector<double> datos, char delimitador) {
+        ofstream archivo(nombreArchivo);
+        if (archivo.is_open()) {
+            for (int i = 0; i < datos.size(); i++) {
+                archivo << datos[i];
+                if (i < datos.size() - 1) {
+                    archivo << delimitador;
+                }
+            }
+            archivo.close();
+        }
+    }
+
+    void guardar(string nombreArchivo, vector<string> datos, char delimitador) {
+        ofstream archivo(nombreArchivo);
+        if (archivo.is_open()) {
+            for (int i = 0; i < datos.size(); i++) {
+                archivo << datos[i];
+                if (i < datos.size() - 1) {
+                    archivo << delimitador;
+                }
+            }
+            archivo.close();
+        }
+    }
+
+    // ===== GUARDAR archivos de TEXTO (multiples lineas - para objetos) =====
+    void guardarLineas(string nombreArchivo, vector<vector<int>> lineas, char delimitador) {
+        ofstream archivo(nombreArchivo);
+        if (archivo.is_open()) {
+            for (int i = 0; i < lineas.size(); i++) {
+                // Guardar cada linea (cada objeto)
+                for (int j = 0; j < lineas[i].size(); j++) {
+                    archivo << lineas[i][j];
+                    if (j < lineas[i].size() - 1) {
+                        archivo << delimitador;
+                    }
+                }
+                // Salto de linea al final de cada objeto
+                if (i < lineas.size() - 1) {
+                    archivo << endl;
+                }
+            }
+            archivo.close();
+        }
+    }
+
+    void guardarLineas(string nombreArchivo, vector<vector<double>> lineas, char delimitador) {
+        ofstream archivo(nombreArchivo);
+        if (archivo.is_open()) {
+            for (int i = 0; i < lineas.size(); i++) {
+                for (int j = 0; j < lineas[i].size(); j++) {
+                    archivo << lineas[i][j];
+                    if (j < lineas[i].size() - 1) {
+                        archivo << delimitador;
+                    }
+                }
+                if (i < lineas.size() - 1) {
+                    archivo << endl;
+                }
+            }
+            archivo.close();
+        }
+    }
+
+    void guardarLineas(string nombreArchivo, vector<vector<string>> lineas, char delimitador) {
+        ofstream archivo(nombreArchivo);
+        if (archivo.is_open()) {
+            for (int i = 0; i < lineas.size(); i++) {
+                for (int j = 0; j < lineas[i].size(); j++) {
+                    archivo << lineas[i][j];
+                    if (j < lineas[i].size() - 1) {
+                        archivo << delimitador;
+                    }
+                }
+                if (i < lineas.size() - 1) {
+                    archivo << endl;
+                }
+            }
+            archivo.close();
+        }
+    }
+
+    // ===== LEER archivos de TEXTO (una linea) =====
+    vector<int> leerInt(string nombreArchivo, char delimitador) {
+        vector<int> datos;
+        ifstream archivo(nombreArchivo);
+
+        if (archivo.is_open()) {
+            string linea;
+            if (getline(archivo, linea)) {
+                stringstream ss(linea);
+                string valor;
+
+                while (getline(ss, valor, delimitador)) {
+                    datos.push_back(stoi(valor));
+                }
+            }
+            archivo.close();
+        }
+        return datos;
+    }
+
+    vector<double> leerDouble(string nombreArchivo, char delimitador) {
+        vector<double> datos;
+        ifstream archivo(nombreArchivo);
+
+        if (archivo.is_open()) {
+            string linea;
+            if (getline(archivo, linea)) {
+                stringstream ss(linea);
+                string valor;
+
+                while (getline(ss, valor, delimitador)) {
+                    datos.push_back(stod(valor));
+                }
+            }
+            archivo.close();
+        }
+        return datos;
+    }
+
+    vector<string> leerString(string nombreArchivo, char delimitador) {
+        vector<string> datos;
+        ifstream archivo(nombreArchivo);
+
+        if (archivo.is_open()) {
+            string linea;
+            if (getline(archivo, linea)) {
+                stringstream ss(linea);
+                string valor;
+
+                while (getline(ss, valor, delimitador)) {
+                    datos.push_back(valor);
+                }
+            }
+            archivo.close();
+        }
+        return datos;
+    }
+
+    // ===== LEER archivos de TEXTO (multiples lineas - para crear objetos) =====
+    vector<vector<int>> leerLineasInt(string nombreArchivo, char delimitador) {
+        vector<vector<int>> lineas;
+        ifstream archivo(nombreArchivo);
+
+        if (archivo.is_open()) {
+            string linea;
+            while (getline(archivo, linea)) {
+                vector<int> datosLinea;
+                stringstream ss(linea);
+                string valor;
+
+                while (getline(ss, valor, delimitador)) {
+                    datosLinea.push_back(stoi(valor));
+                }
+                lineas.push_back(datosLinea);
+            }
+            archivo.close();
+        }
+        return lineas;
+    }
+
+    vector<vector<double>> leerLineasDouble(string nombreArchivo, char delimitador) {
+        vector<vector<double>> lineas;
+        ifstream archivo(nombreArchivo);
+
+        if (archivo.is_open()) {
+            string linea;
+            while (getline(archivo, linea)) {
+                vector<double> datosLinea;
+                stringstream ss(linea);
+                string valor;
+
+                while (getline(ss, valor, delimitador)) {
+                    datosLinea.push_back(stod(valor));
+                }
+                lineas.push_back(datosLinea);
+            }
+            archivo.close();
+        }
+        return lineas;
+    }
+
+    vector<vector<string>> leerLineasString(string nombreArchivo, char delimitador) {
+        vector<vector<string>> lineas;
+        ifstream archivo(nombreArchivo);
+
+        if (archivo.is_open()) {
+            string linea;
+            while (getline(archivo, linea)) {
+                vector<string> datosLinea;
+                stringstream ss(linea);
+                string valor;
+
+                while (getline(ss, valor, delimitador)) {
+                    datosLinea.push_back(valor);
+                }
+                lineas.push_back(datosLinea);
+            }
+            archivo.close();
+        }
+        return lineas;
+    }
+
+    // ===== LEER todas las lineas de un archivo (sin delimitador) =====
+    vector<string> leerTodasLineas(string nombreArchivo) {
+        vector<string> lineas;
+        ifstream archivo(nombreArchivo);
+
+        if (archivo.is_open()) {
+            string linea;
+            while (getline(archivo, linea)) {
+                lineas.push_back(linea);
+            }
+            archivo.close();
+        }
+        return lineas;
+    }
+
+    // ===== GUARDAR archivos BINARIOS =====
+    void guardarBin(string nombreArchivo, vector<int> datos) {
+        ofstream archivo(nombreArchivo, ios::binary);
+        if (archivo.is_open()) {
+            for (int i = 0; i < datos.size(); i++) {
+                archivo.write((char*)&datos[i], sizeof(int));
+            }
+            archivo.close();
+        }
+    }
+
+    void guardarBin(string nombreArchivo, vector<double> datos) {
+        ofstream archivo(nombreArchivo, ios::binary);
+        if (archivo.is_open()) {
+            for (int i = 0; i < datos.size(); i++) {
+                archivo.write((char*)&datos[i], sizeof(double));
+            }
+            archivo.close();
+        }
+    }
+
+    // ===== LEER archivos BINARIOS =====
+    vector<int> leerIntBin(string nombreArchivo, int cantidad) {
+        vector<int> datos;
+        ifstream archivo(nombreArchivo, ios::binary);
+
+        if (archivo.is_open()) {
+            for (int i = 0; i < cantidad; i++) {
+                int valor;
+                archivo.read((char*)&valor, sizeof(int));
+                datos.push_back(valor);
+            }
+            archivo.close();
+        }
+        return datos;
+    }
+
+    vector<double> leerDoubleBin(string nombreArchivo, int cantidad) {
+        vector<double> datos;
+        ifstream archivo(nombreArchivo, ios::binary);
+
+        if (archivo.is_open()) {
+            for (int i = 0; i < cantidad; i++) {
+                double valor;
+                archivo.read((char*)&valor, sizeof(double));
+                datos.push_back(valor);
+            }
+            archivo.close();
+        }
+        return datos;
+    }
+
+    // ===== UTILIDADES =====
+    bool archivoExiste(string nombreArchivo) {
+        ifstream archivo(nombreArchivo);
         return archivo.good();
     }
-
-    // Lee el primer elemento POD del archivo en 'dato'.
-    bool cargar(T& dato) {
-        ifstream archivo(ruta, ios::binary | ios::in);
-        if (!archivo.is_open()) return false;
-        archivo.read(reinterpret_cast<char*>(&dato), sizeof(T));
-        return archivo.gcount() == sizeof(T);
-    }
-
-    // Guarda un arreglo de 'count' elementos POD (sobreescribe el archivo).
-    bool guardarColeccion(const T* datos, int count) {
-        ofstream archivo(ruta, ios::binary | ios::out);
-        if (!archivo.is_open()) return false;
-        archivo.write(reinterpret_cast<const char*>(datos), sizeof(T) * count);
-        return archivo.good();
-    }
-
-    // Carga todos los elementos POD en un arreglo dinamico.
-    // Retorna la cantidad de elementos leidos. El CALLER debe hacer delete[] en datos.
-    int cargarColeccion(T*& datos) {
-        ifstream archivo(ruta, ios::binary | ios::in);
-        if (!archivo.is_open()) { datos = nullptr; return 0; }
-        archivo.seekg(0, ios::end);
-        streamsize tamano = archivo.tellg();
-        archivo.seekg(0, ios::beg);
-        int count = (int)(tamano / sizeof(T));
-        if (count <= 0) { datos = nullptr; return 0; }
-        datos = new T[count];
-        archivo.read(reinterpret_cast<char*>(datos), sizeof(T) * count);
-        return count;
-    }
-
-    bool existeArchivo() const {
-        ifstream archivo(ruta, ios::binary | ios::in);
-        return archivo.is_open();
-    }
-
-    bool limpiarArchivo() {
-        ofstream archivo(ruta, ios::binary | ios::out | ios::trunc);
-        return archivo.is_open();
-    }
-
-    const string& getRuta() const { return ruta; }
-};
-
-// Especializacion para string — opera en modo texto (linea por linea).
-template <>
-class GestorDeArchivos<string> {
-private:
-    string ruta;
-
-public:
-    explicit GestorDeArchivos(const string& ruta) : ruta(ruta) {}
-
-    bool guardar(const string& dato, bool append = true) {
-        ios::openmode modo = ios::out;
-        if (append) modo |= ios::app;
-        ofstream archivo(ruta, modo);
-        if (!archivo.is_open()) return false;
-        archivo << dato << "\n";
-        return archivo.good();
-    }
-
-    bool cargar(string& dato) {
-        ifstream archivo(ruta, ios::in);
-        if (!archivo.is_open()) return false;
-        return (bool)getline(archivo, dato);
-    }
-
-    bool existeArchivo() const {
-        ifstream archivo(ruta, ios::in);
-        return archivo.is_open();
-    }
-
-    bool limpiarArchivo() {
-        ofstream archivo(ruta, ios::out | ios::trunc);
-        return archivo.is_open();
-    }
-
-    const string& getRuta() const { return ruta; }
 };
