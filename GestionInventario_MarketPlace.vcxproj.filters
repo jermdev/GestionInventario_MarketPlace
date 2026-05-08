@@ -116,6 +116,12 @@
     <ClInclude Include="ProductoService.h">
       <Filter>service</Filter>
     </ClInclude>
+    <ClInclude Include="Envio.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="PedidoService.h">
+      <Filter>service</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GestionInventario_MarketPlace.cpp">
