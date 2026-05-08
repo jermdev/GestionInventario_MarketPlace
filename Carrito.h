@@ -24,6 +24,16 @@ public:
 	}
 
 
+	Lista<NProductos*>* getProductos() { return productos; }
+
+	void vaciarCarrito() {
+		while (!productos->esVacia()) {
+			productos->eliminaInicial();
+		}
+		numeroProductos = 0;
+		precioDelCarrito = 0;
+	}
+
 	void listarCarrito() {
 		int nProductos = productos->longitud();
 		cout << "Carrito \n";

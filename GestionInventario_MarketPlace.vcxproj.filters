@@ -21,14 +21,14 @@
     <Filter Include="builders">
       <UniqueIdentifier>{4324cd1c-c280-4485-ba07-40c7b86b16d7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="GestorArchivo">
-      <UniqueIdentifier>{53c612d5-f751-467c-a2a4-8ca32788ef21}</UniqueIdentifier>
-    </Filter>
     <Filter Include="UI">
       <UniqueIdentifier>{a7f1ae24-5979-4c3d-80f9-b7c707f634ee}</UniqueIdentifier>
     </Filter>
     <Filter Include="utils">
       <UniqueIdentifier>{658f2644-3d88-438b-83d2-5d00f5baf4ad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos">
+      <UniqueIdentifier>{53c612d5-f751-467c-a2a4-8ca32788ef21}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -127,5 +127,10 @@
     <ClCompile Include="pch.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="productos.txt">
+      <Filter>Archivos</Filter>
+    </Text>
   </ItemGroup>
 </Project>
