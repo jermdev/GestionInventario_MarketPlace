@@ -28,6 +28,7 @@ public:
         cin.ignore(numeric_limits<streamsize>::max(), '\n');
 
         string nombre, correo, direccion, contrasenia;
+		char ch;
 
         cout << "Nombre completo: ";
         getline(cin, nombre);
@@ -40,11 +41,24 @@ public:
         getline(cin, direccion);
 
         cout << "Contrasenia: ";
-        cout << "\x1b[30m";
-        // \x1b[0m es el codigo ANSI que resetea la consola a sus colores originales.
-        cin >> contrasenia;
-        cout << "\x1b[0m";
+        while (true) {
+            ch = _getch();
 
+            if (ch == '\r') {
+                break;
+            }
+            else if (ch == '\b') {
+                if (contrasenia.length() > 0) {
+                    contrasenia.pop_back();
+                    cout << "\b \b";
+                }
+            }
+            else {
+                contrasenia += ch;
+                cout << "*";
+            }
+        }
+        cout << "\n";
         Auth::ResultadoRegistro resultado;
         if (tipo == 1)
             resultado = auth->registrarCliente(nombre, correo, direccion, contrasenia);
