@@ -117,10 +117,16 @@
       <Filter>service</Filter>
     </ClInclude>
     <ClInclude Include="Envio.h">
-      <Filter>core</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="PedidoService.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="UsuarioService.h">
       <Filter>service</Filter>
+    </ClInclude>
+    <ClInclude Include="idAleatorio.h">
+      <Filter>utils</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -15,7 +15,7 @@ public:
         int opcion;
         do {
             cout << "\n============================\n";
-            cout << "     MARKET PLACE\n";
+            cout << "     MARKET PLACE AMAZON\n";
             cout << "============================\n";
             cout << "1. Iniciar Sesion\n";
             cout << "2. Registrarse\n";
@@ -28,10 +28,15 @@ public:
                 bool ok = IniciarSesion::Render(auth);
                 if (ok && auth->hayUsuarioActivo()) {
                     int tipo = auth->getUsuarioActual()->getTipoId();
-                    if (tipo == 1)
-                        ClienteUI::Render();
-                    else
-                        VendedorUI::Render();
+                    Usuario* u = auth->getUsuarioActual();
+                    if (tipo == 1) {
+                        Cliente* c = dynamic_cast<Cliente*>(u);
+                        ClienteUI::Render(c);
+                    }
+                    else {
+                        Vendedor* v = dynamic_cast<Vendedor*>(u);
+                        VendedorUI::Render(v);
+                    }
                     //auth->cerrarSesion();
                 }
                 break;

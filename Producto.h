@@ -8,14 +8,16 @@ private:
 	string categoria;
 	double precio;
 	int id;
+	int idVendedor;
 	int stock;
 public:
-	Producto(string nombre, string categoria, double precio, int id, int stock) {
+	Producto(string nombre, string categoria, double precio, int id, int idVendedor, int stock) {
 		this->id = id;
 		this->categoria = categoria;
 		this->nombre = nombre;
 		this->precio = precio;
 		this->stock = stock;
+		this->idVendedor = idVendedor;
 	}
 
 	~Producto()
@@ -27,7 +29,7 @@ public:
 	double getPrecio() { return precio; }
 	int getId() { return id; }
 	int getStock() { return stock; }
-
+	int getIdVendedor() { return idVendedor; }
 
 	void setNombre(string nombre) { this->nombre = nombre; }
 	void setCategoria(string categoria) { this->categoria = categoria; }

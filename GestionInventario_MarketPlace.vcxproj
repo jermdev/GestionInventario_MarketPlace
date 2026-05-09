@@ -135,6 +135,7 @@
     <ClInclude Include="ClienteUI.h" />
     <ClInclude Include="Comprobante.h" />
     <ClInclude Include="GestorMenu.h" />
+    <ClInclude Include="idAleatorio.h" />
     <ClInclude Include="IniciarSesion.h" />
     <ClInclude Include="Lista.h" />
     <ClInclude Include="Nodo.h" />
@@ -150,6 +151,7 @@
     <ClInclude Include="UserBuilder.h" />
     <ClInclude Include="UserRepository.h" />
     <ClInclude Include="Usuario.h" />
+    <ClInclude Include="UsuarioService.h" />
     <ClInclude Include="Vendedor.h" />
     <ClInclude Include="VendedoresBuilder.h" />
     <ClInclude Include="VendedorUI.h" />

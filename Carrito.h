@@ -37,7 +37,7 @@ public:
 	void listarCarrito() {
 		int nProductos = productos->longitud();
 		cout << "Carrito \n";
-		cout << "N� " << nProductos << "\n";
+		cout << "N° " << nProductos << "\n";
 
 		NProductos* aux = productos->obtenerInicial();
 		for (int i = 0; i < nProductos; i++) {

@@ -22,7 +22,7 @@ public:
 		delete gestorArchivo;
 	}
 
-	void agregarProducto(Producto* p) {
+	void agregarProducto(Producto* p, int IDVendedor) {
 
 		productos->agregaFinal(p);
 		guardarProductos();
@@ -40,6 +40,24 @@ public:
 		}
 
 		return buscarProductoPorId(indice + 1, condicion);
+	}
+
+	template<class T>
+	Lista<Producto*>* obtenerPorductosPorCondicion(int indice, T condicion) {
+
+		if (indice == productos->longitud()) {
+			return new Lista<Producto*>();
+		}
+
+		Lista<Producto*>* resultado = obtenerPorductosPorCondicion(indice + 1, condicion);
+
+
+		Producto* p = productos->obtenerPos(indice);
+		if (condicion(p)) {
+			resultado->agregaInicial(p);
+		}
+
+		return resultado;
 	}
 
 	void listarProductoPorId(int id) {
@@ -67,6 +85,7 @@ public:
 		for (int i = 0; i < productos->longitud(); i++) {
 			Producto* p = productos->obtenerPos(i);
 			vector<string>linea;
+			linea.push_back(to_string(p->getIdVendedor())); // agregamos el id del vendedor al inicio
 			linea.push_back(p->getNombre());
 			linea.push_back(p->getCategoria());
 			linea.push_back(to_string(p->getPrecio()));
@@ -78,27 +97,65 @@ public:
 
 	}
 
-	void obtenerProductos() {
+	void iniciaizarProductos() {
 
-		vector<vector<string>>lineas = gestorArchivo->leerLineasString("productos.txt",';');
+		vector<vector<string>> lineas =
+			gestorArchivo->leerLineasString("productos.txt", ';');
 
 		for (int i = 0; i < lineas.size(); i++) {
-			if (lineas[i].size() >= 5) {
 
-				string nombre = lineas[i][0];
-				string categoria = lineas[i][1];
-				double precio = stod(lineas[i][2]);
-				int id = stoi(lineas[i][3]);
-				int stock = stoi(lineas[i][4]);
+			// Ahora son 6 campos
+			if (lineas[i].size() >= 6) {
 
-				Producto* p = new Producto(nombre, categoria, precio, id, stock);
+				int idVendedor = stoi(lineas[i][0]);
+				string nombre = lineas[i][1];
+				string categoria = lineas[i][2];
+				double precio = stod(lineas[i][3]);
+				int idProducto = stoi(lineas[i][4]);
+				int stock = stoi(lineas[i][5]);
+
+				// Inicializar incluyendo idVendedor
+				Producto* p = new Producto(
+					nombre,
+					categoria,
+					precio,
+					idProducto,
+					idVendedor,
+					stock
+				);
+
 				productos->agregaFinal(p);
-
 			}
-
 		}
 
+	}
 
+	void inicializarProductosPorIdVendedor(int idVendedorBuscado) {
+
+		vector<vector<string>> lineas =
+			gestorArchivo->leerLineasString("productos.txt", ';');
+
+		for (int i = 0; i < lineas.size(); i++) {
+
+			if (lineas[i].size() >= 6) {
+
+				int idVendedor = stoi(lineas[i][0]);
+
+				// Verificar si pertenece al vendedor buscado
+				if (idVendedor == idVendedorBuscado) {
+
+					string nombre = lineas[i][1];
+					string categoria = lineas[i][2];
+					double precio = stod(lineas[i][3]);
+					int idProducto = stoi(lineas[i][4]);
+					int stock = stoi(lineas[i][5]);
+
+					Producto* p = new Producto(nombre, categoria, precio, idProducto, idVendedor, stock);
+
+					productos->agregaFinal(p);
+				}
+			}
+		}
 	}
 
 
