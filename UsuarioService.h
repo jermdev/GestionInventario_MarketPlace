@@ -32,8 +32,8 @@ public:
 		return productoService->obtenerPorductosPorCondicion(0, [categoria](Producto* p) {return (p->getCategoria() == categoria); });
 	}
 
-	void realizarCompraProductos(int idUsuario, Carrito* cli, MetodoPago metodo,TipoComprobante tipo) {
-		CompraService* compraService = new CompraService(productoService, pedidoService, idUsuario);
+	void realizarCompraProductos(int idUsuario, Cliente* cli, MetodoPago metodo,TipoComprobante tipo) {
+		CompraService* compraService = new CompraService(productoService, pedidoService);
 		compraService->generarCompra(cli, metodo, tipo);
 	}
 

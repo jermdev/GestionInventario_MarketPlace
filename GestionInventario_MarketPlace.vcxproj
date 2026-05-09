@@ -126,6 +126,7 @@
     <ClInclude Include="Auth.h" />
     <ClInclude Include="CompraService.h" />
     <ClInclude Include="Envio.h" />
+    <ClInclude Include="fechas.h" />
     <ClInclude Include="GestorDeArchivos.h" />
     <ClInclude Include="HashUtils.h" />
     <ClInclude Include="AuthUI.h" />
