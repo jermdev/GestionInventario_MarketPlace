@@ -33,10 +33,17 @@ class ClienteUI {
                 break;
             }
 
-            case 3:
-                cout << "Ordenando productos por precio...\n";
-                break;
+            case 3: {
+                    string tipoOrden;
+                do
+                {
+                    cout << "Ordenar por mayor o menor precio (ejemplo mayor / menor): "; cin >> tipoOrden;
 
+                } while (tipoOrden!= "mayor" && tipoOrden != "menor");
+                
+                uService->mostrarListaProductosOrdenadaPorPrecio(tipoOrden);
+                break;
+            }
             case 4:
                 cout << "Mostrando detalles del producto...\n";
                 break;
