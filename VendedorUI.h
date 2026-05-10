@@ -7,16 +7,14 @@ using namespace std;
 class VendedorUI {
 
 
-    static void menuMisProductos() {
+    static void menuMisProductos(UsuarioService* uService, Vendedor* ven) {
         int opcion;
 
         do {
             cout << "\n====== MIS PRODUCTOS ======\n";
             cout << "1. Ver todos mis productos\n";
             cout << "2. Buscar producto\n";
-            cout << "3. Editar producto\n";
-            cout << "4. Eliminar producto\n";
-            cout << "5. Ver stock disponible\n";
+            cout << "3. Eliminar producto\n";
             cout << "0. Volver\n";
             cout << "Seleccione una opcion: ";
             cin >> opcion;
@@ -24,7 +22,7 @@ class VendedorUI {
             switch (opcion) {
 
             case 1:
-                cout << "Mostrando productos...\n";
+                uService->mostrarProductosPorVendedor(ven->getId());
                 break;
 
             case 2:
@@ -33,14 +31,6 @@ class VendedorUI {
 
             case 3:
                 cout << "Editando producto...\n";
-                break;
-
-            case 4:
-                cout << "Eliminando producto...\n";
-                break;
-
-            case 5:
-                cout << "Mostrando stock disponible...\n";
                 break;
 
             case 0:
@@ -143,7 +133,7 @@ public:
             switch (opcion) {
 
             case 1:
-                menuMisProductos();
+                menuMisProductos(uService, ven);
                 break;
 
             case 2:
