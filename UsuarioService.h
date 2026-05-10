@@ -32,8 +32,8 @@ public:
 		return productoService->obtenerPorductosPorCondicion(0, [categoria](Producto* p) {return (p->getCategoria() == categoria); });
 	}
 
-	void realizarCompraProductos(int idUsuario, Carrito* cli, MetodoPago metodo,TipoComprobante tipo) {
-		CompraService* compraService = new CompraService(productoService, pedidoService, idUsuario);
+	void realizarCompraProductos(int idUsuario, Cliente* cli, MetodoPago metodo,TipoComprobante tipo) {
+		CompraService* compraService = new CompraService(productoService, pedidoService);
 		compraService->generarCompra(cli, metodo, tipo);
 	}
 
@@ -55,5 +55,11 @@ public:
 		Producto* nuevoProducto = new Producto(nombre, categoria, precio, id , idVendedor, stock);
 		productoService->agregarProducto(nuevoProducto, idVendedor);
 	}
-
+	void mostrarProductosPorVendedor(int idVendedor) {
+		Lista<Producto*>* productos = productoService->obtenerPorductosPorCondicion(0, [idVendedor](Producto* p) { return p->getIdVendedor() == idVendedor; });
+		for (int i = 0; i < productos->longitud(); i++) {
+			cout << "\nN°" << i << endl;
+			productos->obtenerPos(i)->MostrarProducto();
+		}
+	}
 };

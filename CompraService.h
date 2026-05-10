@@ -6,6 +6,7 @@
 #include "PedidoService.h"
 #include "Pedido.h"
 #include "Pago.h"
+#include "fechas.h"
 using namespace std;
 
 enum EstadoCompra {
@@ -17,24 +18,24 @@ enum EstadoCompra {
 class CompraService {
 private:
 
-	ProductoService* inventario = new ProductoService();
-	PedidoService* pedido = new PedidoService();
-	int id;
+	ProductoService* inventario;
+	PedidoService* pedido;
+
 
 public:
 
-	CompraService(ProductoService*inventario,PedidoService*pedido, int idUsuario) {
+	// Ahora recibe también el id del vendedor cuyo inventario se está usando
+	CompraService(ProductoService* inventario, PedidoService* pedido) {
 		this->inventario = inventario;
 		this->pedido = pedido;
-		this->id = idUsuario;
 	}
 	~CompraService() {
-		delete inventario;
-		delete pedido;
+		// No eliminar inventario ni pedido aquí: son inyectados y su ciclo de vida lo debe controlar el creador.
 	}
 
-	void generarCompra(Carrito*carrito,MetodoPago metodo,TipoComprobante tipoComp) {
-		Lista<NProductos*>* items = carrito->getProductos();
+	void generarCompra(Cliente* cli, MetodoPago metodo, TipoComprobante tipoComp) {
+		// recuperamos los productos que estan en el carrito
+		Lista<NProductos*>* items = cli->getCarrito()->getProductos();
 
 		if (items->esVacia()) {
 			cout << "Carrito Vacio" << endl; return;
@@ -47,7 +48,7 @@ public:
 
 			Producto* prodInventario = inventario->buscarProductoPorId(0, [idProducto](Producto* p) {
 				return p != nullptr && p->getId() == idProducto;
-				});
+			});
 
 			if (prodInventario == nullptr) {
 				cout << "Producto con id " << idProducto << " no existe en inventario. Compra cancelada." << endl;
@@ -64,7 +65,7 @@ public:
 
 		// Aplicar cambios al inventario (objeto dentro de ProductoService) y preparar pedido
 		double pesoTotal = 0, montoTotal = 0;
-		Lista<Producto*>* productosEscogidos = new Lista<Producto*>();
+		Lista<NProductos*>* productosEscogidos = new Lista<NProductos*>();
 
 		for (int i = 0; i < items->longitud(); i++) {
 
@@ -73,7 +74,7 @@ public:
 
 			Producto* prodInventario = inventario->buscarProductoPorId(0, [idProducto](Producto* p) {
 				return p != nullptr && p->getId() == idProducto;
-				});
+			});
 
 			int nuevoStock = prodInventario->getStock() - item->cantidad;
 			prodInventario->setStock(nuevoStock);
@@ -84,28 +85,29 @@ public:
 			montoTotal += (prodInventario->getPrecio() * item->cantidad);
 			pesoTotal += (1.50 * item->cantidad);
 
-			for (int j = 0; j < item->cantidad; j++) {
-				productosEscogidos->agregaFinal(prodInventario);
-			}
+			// Copiar la línea NProductos al pedido (nueva instancia)
+			NProductos* np = new NProductos{ prodInventario, item->cantidad };
+			productosEscogidos->agregaFinal(np);
 		}
 
 		// Persistir cambios: ahora guardarProductos requiere el id del vendedor
 		inventario->guardarProductos();
-
-		Comprobante* com = new Comprobante(id, "05/02/2026", montoTotal, tipoComp);
+		string fechaActual = obtenerFechaActual();
+		Comprobante* com = new Comprobante(cli->getId(), fechaActual, montoTotal, tipoComp);
 		Pago* pag = new Pago(com, metodo, montoTotal);
 		pag->realizarPago(metodo, montoTotal);
 
-		Pedido* nuevoPedido = new Pedido(id, pesoTotal, PENDIENTEDEENVIO, productosEscogidos);
+		// generar fechaEntrega y pasarla al pedido
+		string fechaEntrega = generarFechaEntrega();
+		Pedido* nuevoPedido = new Pedido(cli->getId(), pesoTotal, PENDIENTEDEENTREGA, productosEscogidos, fechaEntrega);
 		pedido->registrarPedido(nuevoPedido);
+		pedido->registrarPedido(nuevoPedido); // registrar una vez suficiente; si hay lógica extra ajustar
 
-		carrito->vaciarCarrito();
+		cli->getCarrito()->vaciarCarrito();
 	}
 
 	void cancelarCompra() {
 		cout << "Compra Cancelada...." << endl;
-
 	}
-
 
 };
