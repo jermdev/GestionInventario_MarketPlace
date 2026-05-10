@@ -4,7 +4,10 @@
 #include "ProductoService.h"
 #include "PedidoService.h"
 #include "CompraService.h"
+
+//utilidades
 #include "idAleatorio.h"
+#include "Ordenamiento.h"
 
 class UsuarioService {
 private:
@@ -12,7 +15,7 @@ private:
 	ProductoService* productoService;
 	PedidoService* pedidoService;
 
-
+	
 public:
 	UsuarioService () {
 		this->productoService = new ProductoService();
@@ -63,6 +66,40 @@ public:
 		}
 		system("pause");
 	}
+
+	void mostrarListaProductosOrdenadaPorPrecio(string tipoOrden) {
+		// Obtener todos los productos (productoService devuelve una Lista nueva en heap)
+		Lista<Producto*>* productos = productoService->obtenerPorductosPorCondicion(0, [](Producto* p) { return true; });
+
+		int n = productos->longitud();
+		if (n == 0) {
+			cout << "No hay productos para ordenar." << endl;
+			delete productos;
+			system("pause");
+			return;
+		}
+
+		bool asc = true;
+		if (tipoOrden == "desc" || tipoOrden == "mayor") asc = false;
+		else if (tipoOrden == "asc" || tipoOrden == "menor") asc = true;
+		else asc = true;
+
+		// Orden sencillo: insertion sort sobre la Lista
+		insertionSortListaPorPrecio(productos, asc);
+
+		// Mostrar productos ordenados
+		for (int i = 0; i < n; ++i) {
+			cout << "\nN°" << i << endl;
+			Producto* p = productos->obtenerPos(i);
+			if (p) p->MostrarProducto();
+		}
+
+		// limpiar lista temporal creada por ProductoService
+		delete productos;
+
+		system("pause");
+	}
+
 	void listarPedidos() {
 
 		Lista<Pedido*>* todosLosPedidos = pedidoService->obtenerPedidosHistoricos();

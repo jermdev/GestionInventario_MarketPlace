@@ -134,6 +134,9 @@
     <ClInclude Include="Cola.h">
       <Filter>utils</Filter>
     </ClInclude>
+    <ClInclude Include="Ordenamiento.h">
+      <Filter>utils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GestionInventario_MarketPlace.cpp">

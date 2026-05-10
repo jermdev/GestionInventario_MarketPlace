@@ -141,6 +141,7 @@
     <ClInclude Include="IniciarSesion.h" />
     <ClInclude Include="Lista.h" />
     <ClInclude Include="Nodo.h" />
+    <ClInclude Include="Ordenamiento.h" />
     <ClInclude Include="Pago.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Pedido.h" />
