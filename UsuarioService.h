@@ -41,12 +41,32 @@ public:
 		return pedidoService->obtenerPedidosHistoricos();
 	}
 
+	void mostrarTodosLosProductos() {
+		productoService->mostrarInventario();
+		system("pause");
+	}
+	void filtrarPorCategoria(string categoria) {
+
+		Lista<Producto*>* productos = productoService->obtenerPorductosPorCondicion(0, [categoria](Producto* p) { return p->getCategoria() == categoria; });
+
+		if (productos->longitud() == 0) {
+			cout << "\n Categoria no encontrada. \n";
+			system("pause");
+			return;
+		}
+
+		for (int i = 0; i < productos->longitud(); i++) {
+			cout << "\nN°" << i << endl;
+			productos->obtenerPos(i)->MostrarProducto();
+		}
+		system("pause");
+	}
 	void listarPedidos() {
 
 	}
 
 	// Para el vendedor
-	void inicializarListaProductosVendedor() {
+	void inicializarListaProductos() {
 		productoService->iniciaizarProductos();
 	}
 

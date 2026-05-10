@@ -9,16 +9,6 @@
 #include "VendedoresBuilder.h"
 using namespace std;
 
-// Formato binario por registro (mismo para clientes y vendedores):
-//   [id:         int32]
-//   [nombre_len: int32][nombre:     char*nombre_len]
-//   [correo_len: int32][correo:     char*correo_len]
-//   [dir_len:    int32][direccion:  char*dir_len]
-//   [hash_len:   int32][hash:       char*hash_len]
-//   [extra:      int32]  → numCompras (Cliente) o numeroEstrellas (Vendedor)
-//
-// std::string no es POD: serializarla con sizeof() escribiria un puntero
-// invalido en la proxima ejecucion. Por eso se usa length-prefixed encoding.
 class UsuarioRepository {
 private:
     string rutaClientes;

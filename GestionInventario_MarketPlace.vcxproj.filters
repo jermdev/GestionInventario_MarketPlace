@@ -131,6 +131,9 @@
     <ClInclude Include="fechas.h">
       <Filter>utils</Filter>
     </ClInclude>
+    <ClInclude Include="Cola.h">
+      <Filter>utils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GestionInventario_MarketPlace.cpp">
@@ -147,5 +150,9 @@
     <Text Include="productos.txt">
       <Filter>Archivos</Filter>
     </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="clientes.bin" />
+    <None Include="vendedores.bin" />
   </ItemGroup>
 </Project>

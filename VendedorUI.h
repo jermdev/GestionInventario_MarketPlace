@@ -122,7 +122,7 @@ class VendedorUI {
 public:
     static void Render(Vendedor* ven) {
         UsuarioService* uService = new UsuarioService();
-        uService->inicializarListaProductosVendedor();
+        uService->inicializarListaProductos();
         int opcion;
         do {
             cout << "\n====== MENU VENDEDOR ======\n";

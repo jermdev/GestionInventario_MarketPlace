@@ -1,45 +1,18 @@
-#pragma once
-template <class T>
+#ifndef __NODO_H__
+#define __NODO_H__
+
+template<class T>
 class Nodo
 {
-private:
-	//propiedades o atributos
-	T elem;
-	Nodo* sgte;
 public:
-	//Constructores
-	Nodo()
-	{
-		sgte = nullptr;
-	}
-	Nodo(T pelem)
-	{
-		elem = pelem;
-		sgte = nullptr;
-	}
+	T dato;
+	Nodo<T>* siguiente;
 
-	//M�todos Setter / Getter
-	void set_Elem(T pelem)
+	Nodo(T v, Nodo<T>* sig = NULL)
 	{
-		elem = pelem;
+		dato = v;
+		siguiente = sig;
 	}
-	T get_Elem()
-	{
-		return elem;
-	}
-	void set_Sgte(Nodo* pSgte)
-	{
-		sgte = pSgte;
-	}
-	Nodo* get_Sgte()
-	{
-		return sgte;
-	}
-
-	//M�todos de Servicio
-	bool es_vacio()
-	{
-		return sgte == NULL;
-	}
-
 };
+
+#endif

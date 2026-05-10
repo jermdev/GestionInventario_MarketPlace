@@ -1,6 +1,6 @@
-#pragma once
+#ifndef __PILA_H__
+#define __PILA_H__
 #include "Nodo.h"
-
 using namespace std;
 
 template<class T>
@@ -48,4 +48,4 @@ bool Pila<T>::estaVacia()
 {
 	return (tope == NULL);
 }
-
+#endif

@@ -48,7 +48,7 @@ public:
 
 			Producto* prodInventario = inventario->buscarProductoPorId(0, [idProducto](Producto* p) {
 				return p != nullptr && p->getId() == idProducto;
-			});
+				});
 
 			if (prodInventario == nullptr) {
 				cout << "Producto con id " << idProducto << " no existe en inventario. Compra cancelada." << endl;
@@ -74,7 +74,7 @@ public:
 
 			Producto* prodInventario = inventario->buscarProductoPorId(0, [idProducto](Producto* p) {
 				return p != nullptr && p->getId() == idProducto;
-			});
+				});
 
 			int nuevoStock = prodInventario->getStock() - item->cantidad;
 			prodInventario->setStock(nuevoStock);

@@ -23,12 +23,15 @@ class ClienteUI {
             switch (opcion) {
             case 1:
                
-                cout << "Mostrando todos los productos...\n";
+                uService->mostrarTodosLosProductos();
                 break;
 
-            case 2:
-                cout << "Filtrando productos por categoria...\n";
+            case 2: {
+                string categoria;
+                cout << "Dijite la categoria que quiere buscar: "; cin >> categoria;
+                uService->filtrarPorCategoria(categoria);
                 break;
+            }
 
             case 3:
                 cout << "Ordenando productos por precio...\n";
@@ -194,6 +197,7 @@ class ClienteUI {
     public:
     static void Render(Cliente* cli) {
         UsuarioService* uService = new UsuarioService();
+        uService->inicializarListaProductos();
         int opcion;
         do {
             cout << "\n====== MENU CLIENTE ======\n";
