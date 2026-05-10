@@ -15,7 +15,7 @@ public:
 	UsuarioService () {
 		this->productoService = new ProductoService();
 		this->pedidoService = new PedidoService();
-
+		
 	}
 
 	~UsuarioService () {
@@ -25,7 +25,7 @@ public:
 	void ListarProductos() {productoService->mostrarInventario();}
 
 	Producto* buscarProductoPorID(int id) {
-		return productoService->buscarProductoPorId(id, [](Producto* p) {return true; });
+		return productoService->buscarProductoPorId(0, [id](Producto* p) { return p->getId() == id; });
 	}
 
 	Lista<Producto*>* buscarProdutoPoCategoria( string categoria) {

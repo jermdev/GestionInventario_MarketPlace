@@ -7,7 +7,7 @@ using namespace std;
 class ClienteUI {
 
 
-    static void menuVerProductos() {
+    static void menuVerProductos(UsuarioService* uService) {
         int opcion;
 
         do {
@@ -22,6 +22,7 @@ class ClienteUI {
 
             switch (opcion) {
             case 1:
+               
                 cout << "Mostrando todos los productos...\n";
                 break;
 
@@ -122,38 +123,37 @@ class ClienteUI {
         } while (opcion != 0);
     }
 
-    static void menuCompra() {
-        int opcion;
-
+    static void menuCompra(Cliente* cli, UsuarioService* uService) {
+        int opcion, mPago, tComp;
         do {
             cout << "\n====== REALIZAR COMPRA ======\n";
             cout << "1. Confirmar compra\n";
-            cout << "2. Seleccionar metodo de pago\n";
-            cout << "3. Ver resumen de compra\n";
+            cout << "2. Ver resumen de compra (Carrito)\n";
             cout << "0. Volver\n";
             cout << "Seleccione una opcion: ";
             cin >> opcion;
 
             switch (opcion) {
             case 1:
-                cout << "Compra confirmada...\n";
-                break;
+                if (cli->getCarrito()->getProductos()->esVacia()) {
+                    cout << "Tu carrito esta vacio. No puedes comprar.\n";
+                    break;
+                }
+                cout << "Metodo de Pago (0: Tarjeta Regalo, 1: Tarjeta): ";
+                cin >> mPago;
+                cout << "Tipo Comprobante (0: Boleta, 1: Factura): ";
+                cin >> tComp;
 
+                uService->realizarCompraProductos(cli->getId(),cli,static_cast<MetodoPago>(mPago),static_cast<TipoComprobante>(tComp) );
+                break;
             case 2:
-                cout << "Seleccionando metodo de pago...\n";
+                cli->getCarrito()->listarCarrito();
                 break;
-
-            case 3:
-                cout << "Mostrando resumen de compra...\n";
-                break;
-
             case 0:
                 break;
-
             default:
                 cout << "Opcion no valida.\n";
             }
-
         } while (opcion != 0);
     }
 
@@ -193,6 +193,7 @@ class ClienteUI {
     }
     public:
     static void Render(Cliente* cli) {
+        UsuarioService* uService = new UsuarioService();
         int opcion;
         do {
             cout << "\n====== MENU CLIENTE ======\n";
@@ -208,7 +209,7 @@ class ClienteUI {
             switch (opcion) {
 
             case 1:
-                menuVerProductos();
+                menuVerProductos(uService);
                 break;
 
             case 2:
@@ -220,7 +221,7 @@ class ClienteUI {
                 break;
 
             case 4:
-                menuCompra();
+                menuCompra(cli,uService);
                 break;
 
             case 5:
