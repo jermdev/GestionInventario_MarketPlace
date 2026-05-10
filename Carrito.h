@@ -1,6 +1,7 @@
 #pragma once
 #include "Lista.h"
 #include "Producto.h"
+#include "Pila.h"
 struct NProductos {
 	Producto* producto;
 	int cantidad;
@@ -36,20 +37,26 @@ public:
 
 	void listarCarrito() {
 		int nProductos = productos->longitud();
-		cout << "Carrito \n";
-		cout << "N° " << nProductos << "\n";
-
-		NProductos* aux = productos->obtenerInicial();
-		for (int i = 0; i < nProductos; i++) {
-			if (aux == nullptr) return;
-			Producto* p = aux->producto;
-			int cantidad = aux->cantidad;
-
-			cout << "\nCantidad: " << cantidad << "\n";
-			p->MostrarProducto();
-			aux = productos->obtenerPos(i + 1);
+		if (nProductos == 0) {
+			cout << "El carrito esta vacio.\n";
+			return;
 		}
-	}
+
+		cout << "\n--- CARRITO DE COMPRAS ---\n";
+		cout << "Total de items distintos: " << nProductos << "\n";
+
+		Pila<NProductos*> pilaCarrito;
+
+		for (int i = 0; i < nProductos; i++) {
+			pilaCarrito.push(productos->obtenerPos(i));
+		}
+
+		while (!pilaCarrito.estaVacia()) {
+			NProductos* aux = pilaCarrito.pop();
+			cout << "\n[Agregado Recientemente] Cantidad: " << aux->cantidad << "\n";
+			aux->producto->MostrarProducto();
+		}
+	} 
 
 	void agregarProducto(Producto* producto, int cantidadSolicitada) {
 		if (producto->getStock() < cantidadSolicitada) {
