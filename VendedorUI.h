@@ -8,7 +8,7 @@ class VendedorUI {
 
 
     static void menuMisProductos(UsuarioService* uService, Vendedor* ven) {
-        int opcion;
+        int opcion,id=0;
 
         do {
             cout << "\n====== MIS PRODUCTOS ======\n";
@@ -30,7 +30,9 @@ class VendedorUI {
                 break;
 
             case 3:
-                cout << "Editando producto...\n";
+                cout << "Ingrese el ID del producto a eliminar: " << endl;
+                cin >> id;
+                uService->eliminarProductosPorVendedor(ven->getId(), id);
                 break;
 
             case 0:
@@ -69,7 +71,7 @@ class VendedorUI {
         cout << "Producto agregado exitosamente." << endl;
 
     }
-
+ 
     static void menuPedidosRecibidos() {
         int opcion;
 

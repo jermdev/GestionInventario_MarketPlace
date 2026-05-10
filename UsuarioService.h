@@ -62,4 +62,17 @@ public:
 			productos->obtenerPos(i)->MostrarProducto();
 		}
 	}
+	void eliminarProductosPorVendedor(int idVendedor,int idProducto) {
+		Lista<Producto*>* productos = productoService->obtenerPorductosPorCondicion(0, [idVendedor](Producto* p) { return p->getIdVendedor() == idVendedor; });
+		
+		for (int i = 0; i < productos->longitud(); i++) {
+			if (productos->obtenerPos(i)->getIdVendedor() == idVendedor && productos->obtenerPos(i)->getId()==idProducto) {
+				
+				productoService->eliminarProducto(idProducto);
+			}
+			else {
+				cout << "No hay producto a eliminar" << endl;
+			}
+		}
+	}
 };

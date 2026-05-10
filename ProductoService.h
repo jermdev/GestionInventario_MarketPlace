@@ -78,6 +78,22 @@ public:
 		}
 	}
 
+	void eliminarProducto(int id) {
+
+
+		for (int i = 0; i < productos->longitud(); i++) {
+
+			auto productoEliminar = productos->obtenerPos(i);
+
+			if (productoEliminar->getId() == id) {
+				productos->eliminaPos(i);
+				guardarProductos();
+				cout << "Producto eliminado...."<<endl;
+				break;
+			}
+		}
+	}
+
 	void guardarProductos() {
 
 		vector < vector<string>>lineas;
