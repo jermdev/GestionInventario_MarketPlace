@@ -175,6 +175,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Text Include="pedidos.txt" />
     <Text Include="productos.txt" />
   </ItemGroup>
   <ItemGroup>
