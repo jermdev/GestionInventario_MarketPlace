@@ -38,9 +38,6 @@
     <ClInclude Include="pch.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="GestorMenu.h">
-      <Filter>UI</Filter>
-    </ClInclude>
     <ClInclude Include="Cliente.h">
       <Filter>core</Filter>
     </ClInclude>

@@ -61,8 +61,11 @@ public:
 		}
 
 		for (int i = 0; i < productos->longitud(); i++) {
-			cout << "\nN°" << i << endl;
-			productos->obtenerPos(i)->MostrarProducto();
+			if (productos->obtenerPos(i)->getStock() > 0) {
+				cout << "\nN°" << i << endl;
+				productos->obtenerPos(i)->MostrarProducto();
+
+			}
 		}
 		system("pause");
 	}
@@ -89,9 +92,11 @@ public:
 
 		// Mostrar productos ordenados
 		for (int i = 0; i < n; ++i) {
-			cout << "\nN°" << i << endl;
 			Producto* p = productos->obtenerPos(i);
-			if (p) p->MostrarProducto();
+			if (p->getStock() > 0) {
+				cout << "\nN°" << i << endl;
+				if (p) p->MostrarProducto();
+			}
 		}
 
 		// limpiar lista temporal creada por ProductoService
@@ -103,6 +108,7 @@ public:
 	//Inicializar Pedidos
 
 	void InicializarPedidosPorIdCliente(int idCLiente) {
+		pedidoService->setPedidos(pedidoService->obtenerPedidosHistoricos());
 		Lista<Pedido*>* pedidos = pedidoService->obtenerPedidosPorCondicion(0 ,[idCLiente](Pedido* p) {return p->getIdPedido() == idCLiente; });
 		pedidoService->setPedidos(pedidos);
 	}

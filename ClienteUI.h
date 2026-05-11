@@ -96,7 +96,7 @@ class ClienteUI {
                         system("pause");
                         break;
                     }
-                    cli->getCarrito()->agregarProducto(p, cantidad);
+                        cli->getCarrito()->agregarProducto(p, cantidad);
                 }
 
                 break;
@@ -115,8 +115,7 @@ class ClienteUI {
     }
 
     static void menuCarrito(Cliente* cli, UsuarioService* uService) {
-        int opcion;
-
+        int opcion, id, cant;
         do {
             cout << "\n====== CARRITO ======\n";
             cout << "1. Ver productos del carrito\n";
@@ -129,28 +128,40 @@ class ClienteUI {
 
             switch (opcion) {
             case 1:
-                
+                cli->getCarrito()->listarCarrito();
                 break;
-
             case 2:
-                cout << "Agregando producto al carrito...\n";
+                cout << "Ingrese el ID del producto a agregar: ";
+                cin >> id;
+                {
+                    Producto* p = uService->buscarProductoPorID(id);
+                    if (p != nullptr) {
+                        cout << "Ingrese la cantidad: ";
+                        cin >> cant;
+                        cli->getCarrito()->agregarProducto(p, cant);
+                        cout << "Producto agregado al carrito con exito.\n";
+                    }
+                    else {
+                        cout << "Producto no encontrado en el inventario.\n";
+                    }
+                }
                 break;
-
             case 3:
-                cout << "Eliminando producto del carrito...\n";
+                cout << "Ingrese el ID del producto a eliminar: ";
+                cin >> id;
+                cout << "Ingrese la cantidad a eliminar: ";
+                cin >> cant;
+                cli->getCarrito()->borrarProducto(id, cant);
                 break;
-
             case 4:
+                cli->getCarrito()->vaciarCarrito();
                 cout << "Vaciando carrito...\n";
                 break;
-
             case 0:
                 break;
-
             default:
                 cout << "Opcion no valida.\n";
             }
-
         } while (opcion != 0);
     }
 
@@ -205,14 +216,6 @@ class ClienteUI {
                 uService->listarPedidos();
                 break;
 
-            case 2:
-                cout << "Mostrando detalles del pedido...\n";
-                break;
-
-            case 3:
-                cout << "Buscando pedido por fecha...\n";
-                break;
-
             case 0:
                 break;
 
@@ -226,6 +229,7 @@ class ClienteUI {
     static void Render(Cliente* cli) {
         UsuarioService* uService = new UsuarioService();
         uService->inicializarListaProductos();
+        uService->InicializarPedidosPorIdCliente(cli->getId());
         int opcion;
         do {
             cout << "\n====== MENU CLIENTE ======\n";

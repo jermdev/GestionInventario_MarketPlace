@@ -32,10 +32,12 @@ public:
                     if (tipo == 1) {
                         Cliente* c = dynamic_cast<Cliente*>(u);
                         ClienteUI::Render(c);
+                        u = nullptr;
                     }
                     else {
                         Vendedor* v = dynamic_cast<Vendedor*>(u);
                         VendedorUI::Render(v);
+                        u = nullptr;
                     }
                     //auth->cerrarSesion();
                 }
