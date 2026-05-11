@@ -177,4 +177,9 @@ public:
 			}
 		}
 	}
+	Lista<Producto*>* obtenerListaProductosVendedor(int idVendedor) {
+		return productoService->obtenerPorductosPorCondicion(0, [idVendedor](Producto* p) {
+			return p->getIdVendedor() == idVendedor;
+			});
+	}
 };
