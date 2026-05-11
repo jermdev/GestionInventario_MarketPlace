@@ -2,19 +2,20 @@
 #include <iostream>
 #include "Vendedor.h"
 #include "UsuarioService.h"
+#include "Cola.h"
 using namespace std;
 
 class VendedorUI {
 
-
     static void menuMisProductos(UsuarioService* uService, Vendedor* ven) {
-        int opcion,id=0;
+        int opcion, id = 0;
 
         do {
             cout << "\n====== MIS PRODUCTOS ======\n";
             cout << "1. Ver todos mis productos\n";
             cout << "2. Buscar producto\n";
             cout << "3. Eliminar producto\n";
+            cout << "4. Ver productos\n";
             cout << "0. Volver\n";
             cout << "Seleccione una opcion: ";
             cin >> opcion;
@@ -35,6 +36,36 @@ class VendedorUI {
                 uService->eliminarProductosPorVendedor(ven->getId(), id);
                 break;
 
+            case 4: {
+                Lista<Producto*>* misProductos = uService->obtenerListaProductosVendedor(ven->getId());
+
+                if (misProductos->esVacia()) {
+                    cout << "\nNo tienes productos registrados para mostrar.\n";
+                    break;
+                }
+                Cola<Producto*> colaProductos;
+                for (int i = 0; i < misProductos->longitud(); i++) {
+                    colaProductos.enqueue(misProductos->obtenerPos(i));
+                }
+
+                cout << "\n--- Mostrando productos en Cola (FIFO) ---\n";
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+                while (!colaProductos.esVacia()) {
+                    Producto* p = colaProductos.dequeue();
+                    p->MostrarProducto();
+
+                    if (!colaProductos.esVacia()) {
+                        cout << "\nPresiona ENTER para desencolar y ver el siguiente producto...";
+                        cin.get();
+                    }
+                    else {
+                        cout << "\n¡Has llegado al final de la cola!\n";
+                    }
+                }
+                break;
+            }
+
             case 0:
                 break;
 
@@ -44,7 +75,7 @@ class VendedorUI {
 
         } while (opcion != 0);
     }
-
+    
     static void menuAgregarProducto(UsuarioService* uService, Vendedor *ven) {
         string nombre, categoria;
         double precio;
