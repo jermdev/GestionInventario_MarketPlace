@@ -41,6 +41,7 @@ public:
 		cout << "Nombre: " << nombre << endl;
 		cout << "Categoria: " << categoria << endl;
 		cout << "Precio: " << precio << endl;
+		cout << "Stock disponible: " << stock << endl;
 		cout << "ID: " << id << endl;
 		cout << "**********************" << endl;
 

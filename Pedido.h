@@ -16,6 +16,7 @@ class Pedido
 private:
 
 	int idPedido;
+	int idCliente;
 	double peso;
 	EstadoPedido estadopedido;
 	Lista<NProductos*>* productosComprados; // ahora guarda NProductos (producto + cantidad)
@@ -23,8 +24,9 @@ private:
 
 public:
 	// Nuevo constructor que recibe Lista<NProductos*>*
-	Pedido(int idPedido, double peso, EstadoPedido estadopedido, Lista<NProductos*>* productosComprados, string fechaEntrega) {
+	Pedido(int idPedido, int idCliente,double peso, EstadoPedido estadopedido, Lista<NProductos*>* productosComprados, string fechaEntrega) {
 		this->idPedido = idPedido;
+		this->idCliente = idCliente;
 		this->peso = peso;
 		this->estadopedido = estadopedido;
 		this->productosComprados = productosComprados;
@@ -37,6 +39,7 @@ public:
 		delete productosComprados;
 	}
 	int getIdPedido() { return idPedido; }
+	int getIdCliente() { return idCliente; }
 
 	EstadoPedido getEstadoPedido() { return estadopedido; }
 

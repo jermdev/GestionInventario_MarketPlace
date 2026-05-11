@@ -64,7 +64,7 @@ public:
 		Producto* productoVerificado = buscarProductoPorId(0, [id](Producto* p) {
 			return p->getId() == id;
 			});
-		if (productoVerificado != nullptr) {
+		if (productoVerificado != nullptr && productoVerificado->getStock() > 0) {
 			productoVerificado->MostrarProducto();
 		}
 		else {
@@ -74,7 +74,10 @@ public:
 
 	void mostrarInventario() {
 		for (uint i = 0; i < productos->longitud(); i++) {
-			productos->obtenerPos(i)->MostrarProducto();
+			Producto* p = productos->obtenerPos(i);
+			if (p->getStock() > 0) {
+				p->MostrarProducto();
+			}
 		}
 	}
 

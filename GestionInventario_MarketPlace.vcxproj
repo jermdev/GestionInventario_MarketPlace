@@ -136,7 +136,6 @@
     <ClInclude Include="ClienteBuilder.h" />
     <ClInclude Include="ClienteUI.h" />
     <ClInclude Include="Comprobante.h" />
-    <ClInclude Include="GestorMenu.h" />
     <ClInclude Include="idAleatorio.h" />
     <ClInclude Include="IniciarSesion.h" />
     <ClInclude Include="Lista.h" />

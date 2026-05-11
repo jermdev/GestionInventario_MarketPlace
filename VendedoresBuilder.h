@@ -2,10 +2,7 @@
 #include "UserBuilder.h"
 #include "Vendedor.h"
 
-// NOTA sobre encadenamiento: setNumeroEstrellas retorna VendedorBuilder& para
-// preservar el tipo concreto. Como los setters heredados retornan UsuarioBuilder&,
-// llamar setNumeroEstrellas() primero en el chain evita necesitar un cast.
-// Ejemplo: b.setNumeroEstrellas(0).setNombre("X").setCorreo("y").build()
+
 class VendedorBuilder : public UsuarioBuilder {
 private:
     int numeroEstrellas;

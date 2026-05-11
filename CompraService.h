@@ -7,6 +7,7 @@
 #include "Pedido.h"
 #include "Pago.h"
 #include "fechas.h"
+#include "idAleatorio.h"
 using namespace std;
 
 enum EstadoCompra {
@@ -21,10 +22,8 @@ private:
 	ProductoService* inventario;
 	PedidoService* pedido;
 
-
 public:
 
-	// Ahora recibe también el id del vendedor cuyo inventario se está usando
 	CompraService(ProductoService* inventario, PedidoService* pedido) {
 		this->inventario = inventario;
 		this->pedido = pedido;
@@ -90,18 +89,23 @@ public:
 			productosEscogidos->agregaFinal(np);
 		}
 
-		// Persistir cambios: ahora guardarProductos requiere el id del vendedor
+		// Persistir cambios en inventario
 		inventario->guardarProductos();
+
 		string fechaActual = obtenerFechaActual();
 		Comprobante* com = new Comprobante(cli->getId(), fechaActual, montoTotal, tipoComp);
 		Pago* pag = new Pago(com, metodo, montoTotal);
 		pag->realizarPago(metodo, montoTotal);
 
-		// generar fechaEntrega y pasarla al pedido
+		// generar fechaEntrega y idPedido
 		string fechaEntrega = generarFechaEntrega();
-		Pedido* nuevoPedido = new Pedido(cli->getId(), pesoTotal, PENDIENTEDEENTREGA, productosEscogidos, fechaEntrega);
+		int idPedido = idAleatorioPorDigitos(6); // id único para el pedido
+
+		// CREAR pedido con idPedido y idUsuario
+		Pedido* nuevoPedido = new Pedido(idPedido, cli->getId(), pesoTotal, PENDIENTEDEENTREGA, productosEscogidos, fechaEntrega);
+
+		// Registrar UNA vez
 		pedido->registrarPedido(nuevoPedido);
-		pedido->registrarPedido(nuevoPedido); // registrar una vez suficiente; si hay lógica extra ajustar
 
 		cli->getCarrito()->vaciarCarrito();
 	}
