@@ -119,9 +119,6 @@
     <ClInclude Include="Envio.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="PedidoService.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="UsuarioService.h">
       <Filter>service</Filter>
     </ClInclude>
@@ -136,6 +133,9 @@
     </ClInclude>
     <ClInclude Include="Ordenamiento.h">
       <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="PedidoService.h">
+      <Filter>service</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -153,6 +153,7 @@
     <Text Include="productos.txt">
       <Filter>Archivos</Filter>
     </Text>
+    <Text Include="pedidos.txt" />
   </ItemGroup>
   <ItemGroup>
     <None Include="clientes.bin" />
