@@ -153,11 +153,11 @@ public:
 
 		Pila<Producto*> pilaProductos;
 
+			int index = productos->longitud() + 1;
 		for (int i = 0; i < productos->longitud(); i++) {
 			pilaProductos.push(productos->obtenerPos(i));
 
 			cout << "\n--- Tus productos (Mas recientes primero) ---" << endl;
-			int index = productos->longitud();
 			while (!pilaProductos.estaVacia()) {
 				cout << "\nN°" << --index << endl;
 				pilaProductos.pop()->MostrarProducto();
