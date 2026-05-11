@@ -9,13 +9,14 @@ class ClienteUI {
 
     static void menuVerProductos(UsuarioService* uService) {
         int opcion;
-
+        system("cls");
         do {
+            system("cls");
+
             cout << "\n====== VER PRODUCTOS ======\n";
             cout << "1. Mostrar todos los productos\n";
             cout << "2. Filtrar por categoria\n";
             cout << "3. Ordenar por precio\n";
-            cout << "4. Ver detalles de producto\n";
             cout << "0. Volver\n";
             cout << "Seleccione una opcion: ";
             cin >> opcion;
@@ -44,11 +45,8 @@ class ClienteUI {
                 uService->mostrarListaProductosOrdenadaPorPrecio(tipoOrden);
                 break;
             }
-            case 4:
-                cout << "Mostrando detalles del producto...\n";
-                break;
-
             case 0:
+                system("cls");
                 break;
 
             default:
@@ -60,7 +58,7 @@ class ClienteUI {
 
     static void menuBuscarProducto(Cliente* cli,UsuarioService* uService) {
         int opcion;
-
+        system("cls");
         do {
             cout << "\n====== BUSCAR PRODUCTO ======\n";
             cout << "1. Digite el Id del Producto:\n";
@@ -101,20 +99,22 @@ class ClienteUI {
 
                 break;
             }
- 
-
             
             case 0:
+                system("cls");
+
                 break;
 
             default:
                 cout << "Opcion no valida.\n";
+
             }
 
         } while (opcion != 0);
     }
 
     static void menuCarrito(Cliente* cli, UsuarioService* uService) {
+        system("cls");
         int opcion, id, cant;
         do {
             cout << "\n====== CARRITO ======\n";
@@ -158,6 +158,7 @@ class ClienteUI {
                 cout << "Vaciando carrito...\n";
                 break;
             case 0:
+                system("cls");
                 break;
             default:
                 cout << "Opcion no valida.\n";
@@ -166,6 +167,7 @@ class ClienteUI {
     }
 
     static void menuCompra(Cliente* cli, UsuarioService* uService) {
+        system("cls");
         int opcion, mPago, tComp;
         do {
             cout << "\n====== REALIZAR COMPRA ======\n";
@@ -192,6 +194,7 @@ class ClienteUI {
                 cli->getCarrito()->listarCarrito();
                 break;
             case 0:
+                system("cls");
                 break;
             default:
                 cout << "Opcion no valida.\n";
@@ -201,12 +204,10 @@ class ClienteUI {
 
     static void menuHistorialPedidos(Cliente* cli, UsuarioService* uService) {
         int opcion;
-
+        system("cls");
         do {
             cout << "\n====== HISTORIAL DE PEDIDOS ======\n";
             cout << "1. Ver todos los pedidos\n";
-            cout << "2. Ver detalles de pedido\n";
-            cout << "3. Buscar pedido por fecha\n";
             cout << "0. Volver\n";
             cout << "Seleccione una opcion: ";
             cin >> opcion;
@@ -217,6 +218,7 @@ class ClienteUI {
                 break;
 
             case 0:
+                system("cls");
                 break;
 
             default:
@@ -249,18 +251,22 @@ class ClienteUI {
                 break;
 
             case 2:
+                
                 menuBuscarProducto(cli,uService);
                 break;
 
             case 3:
+                
                 menuCarrito(cli, uService);
                 break;
 
             case 4:
+                
                 menuCompra(cli,uService);
                 break;
 
             case 5:
+                
                 menuHistorialPedidos(cli, uService);
                 break;
 

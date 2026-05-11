@@ -1,4 +1,7 @@
-11;Piano;musica;1500.000000;119994;3
+11;Piano;musica;1500.000000;119994;1
 12;Guitarra;musica;90.000000;121176;4
 11;Sansung A50;telefono;510.000000;106803;3
 15;Pelota de tenis;pelota;5.000000;108345;2
+17;polo;ropa;20.000000;113950;5
+17;Poco X7 Pro;celular;1500.000000;114861;7
+15;mesa;mesa;150.000000;123952;8
