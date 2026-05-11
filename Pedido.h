@@ -33,7 +33,7 @@ public:
 
 	~Pedido()
 	{
-		// No eliminamos los Producto* dentro de NProductos aquí (consistencia con resto del proyecto).
+		// Liberar la lista de NProductos; no se asume propiedad de Producto*
 		delete productosComprados;
 	}
 	int getIdPedido() { return idPedido; }

@@ -100,6 +100,13 @@ public:
 		system("pause");
 	}
 
+	//Inicializar Pedidos
+
+	void InicializarPedidosPorIdCliente(int idCLiente) {
+		Lista<Pedido*>* pedidos = pedidoService->obtenerPedidosPorCondicion(0 ,[idCLiente](Pedido* p) {return p->getIdPedido() == idCLiente; });
+		pedidoService->setPedidos(pedidos);
+	}
+
 	void listarPedidos() {
 
 		Lista<Pedido*>* todosLosPedidos = pedidoService->obtenerPedidosHistoricos();

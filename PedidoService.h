@@ -11,6 +11,7 @@ using namespace std;
 
 class PedidoService {
 private:
+    Lista<Pedido*>* pedidos;
     GestorDeArchivos gestor;
     const string ARCHIVO_PEDIDOS = "pedidos.txt";
     const char DELIMITADOR = '|';
@@ -52,28 +53,7 @@ public:
         gestor.guardarLineas(ARCHIVO_PEDIDOS, dataExistente, DELIMITADOR);
     }
 
-    static string obtenerFechaActual() {
-        time_t t = time(nullptr);
-        tm* now = localtime(&t);
 
-        int anio = now->tm_year + 1900;
-        int mes = now->tm_mon + 1;
-        int dia = now->tm_mday;
-
-        string fecha = "";
-
-        fecha += to_string(anio);
-        fecha += "-";
-
-        if (mes < 10) fecha += "0";
-        fecha += to_string(mes);
-        fecha += "-";
-
-        if (dia < 10) fecha += "0";
-        fecha += to_string(dia);
-
-        return fecha;
-    }
     EstadoPedido estadoPedido(string fechaEntrega, EstadoPedido estadoActual) {
         string hoy = obtenerFechaActual();
         if (estadoActual == EstadoPedido::CANCELADO) return estadoActual;
@@ -88,7 +68,26 @@ public:
         return estadoActual;
     }
 
+    void setPedidos(Lista<Pedido*>* pedidos) { this->pedidos = pedidos; }
+
     // Reconstruye pedidos historicos: usa ProductoService para obtener Producto* por id y preserva cantidad
+    template<class T>
+    Lista<Pedido*>* obtenerPedidosPorCondicion(int indice,T condicion) {
+        if (indice == pedidos->longitud()) {
+            return new Lista<Pedido*>();
+        }
+
+        Lista<Pedido*>* resultado = obtenerPedidosPorCondicion(indice + 1, condicion);
+
+
+        Pedido* p = pedidos->obtenerPos(indice);
+        if (condicion(p)) {
+            resultado->agregaInicial(p);
+        }
+
+        return resultado;
+    }
+
     Lista<Pedido*>* obtenerPedidosHistoricos() {
 
         Lista<Pedido*>* listaPedidos = new Lista<Pedido*>();
