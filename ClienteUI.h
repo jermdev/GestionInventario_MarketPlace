@@ -214,7 +214,7 @@ class ClienteUI {
 
             switch (opcion) {
             case 1:
-                uService->listarPedidos();
+                uService->listarPedidos(cli->getId());
                 break;
 
             case 0:
