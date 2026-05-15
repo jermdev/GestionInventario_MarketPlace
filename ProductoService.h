@@ -82,16 +82,14 @@ public:
 	}
 
 	void eliminarProducto(int id) {
-
-
 		for (int i = 0; i < productos->longitud(); i++) {
-
 			auto productoEliminar = productos->obtenerPos(i);
 
 			if (productoEliminar->getId() == id) {
-				productos->eliminaPos(i);
-				guardarProductos();
-				cout << "Producto eliminado...."<<endl;
+				productos->eliminaPos(i);          // Borra el nodo de la lista
+				delete productoEliminar;           // NUEVO: Borra el producto de la RAM
+				guardarProductos();                // Guarda los cambios en el TXT
+				cout << "Producto eliminado...." << endl;
 				break;
 			}
 		}
@@ -125,23 +123,42 @@ public:
 
 			// Ahora son 6 campos
 			if (lineas[i].size() >= 6) {
+				// Validaciones básicas
+				string sIdVendedor = lineas[i][0];
+				string sNombre = lineas[i][1];
+				string sCategoria = lineas[i][2];
+				string sPrecio = lineas[i][3];
+				string sIdProducto = lineas[i][4];
+				string sStock = lineas[i][5];
 
-				int idVendedor = stoi(lineas[i][0]);
-				string nombre = lineas[i][1];
-				string categoria = lineas[i][2];
-				double precio = stod(lineas[i][3]);
-				int idProducto = stoi(lineas[i][4]);
-				int stock = stoi(lineas[i][5]);
+				// comprobar que nombre y categoria no sean numéricos y que precio/id/stock sean numéricos
+				auto is_number = [](const string& s) {
+					if (s.empty()) return false;
+					char* end = nullptr;
+					strtod(s.c_str(), &end);
+					return end != s.c_str() && *end == '\0';
+				};
 
-				// Inicializar incluyendo idVendedor
-				Producto* p = new Producto(
-					nombre,
-					categoria,
-					precio,
-					idProducto,
-					idVendedor,
-					stock
-				);
+				if (!is_number(sPrecio) || !is_number(sIdProducto) || !is_number(sStock)) {
+					cerr << "Linea productos.txt malformada en la linea " << i+1 << " -> se omite: ";
+					cerr << "[" << lineas[i][0] << ";" << lineas[i][1] << ";" << lineas[i][2] << ";" << lineas[i][3] << ";" << lineas[i][4] << ";" << lineas[i][5] << "]" << endl;
+					continue;
+				}
+				// opcional: comprobar nombre no numérico
+				bool nombreEsNumero = is_number(sNombre);
+				if (nombreEsNumero) {
+					cerr << "Advertencia: nombre numerico en productos.txt linea " << i+1 << ". Revisar." << endl;
+				}
+
+				// parsear valores ya validados
+				int idVendedor = stoi(sIdVendedor);
+				string nombre = sNombre;
+				string categoria = sCategoria;
+				double precio = stod(sPrecio);
+				int idProducto = stoi(sIdProducto);
+				int stock = stoi(sStock);
+
+				Producto* p = new Producto(nombre, categoria, precio, idProducto, idVendedor, stock);
 
 				productos->agregaFinal(p);
 			}

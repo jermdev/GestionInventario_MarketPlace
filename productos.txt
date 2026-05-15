@@ -1,7 +1,5 @@
-11;Piano;musica;1500.000000;119994;1
-12;Guitarra;musica;90.000000;121176;4
-11;Sansung A50;telefono;510.000000;106803;3
-15;Pelota de tenis;pelota;5.000000;108345;2
-17;polo;ropa;20.000000;113950;5
-17;Poco X7 Pro;celular;1500.000000;114861;7
-15;mesa;mesa;150.000000;123952;8
+4;A23 samsung;celular;800.000000;109994;3
+4;Poco X7 pro;celular;1500.000000;112868;5
+4;IPHONE 17;celular;2800.000000;121958;3
+3;Pesa 20Kg;mancuerna;40.000000;114111;39
+3;Cuerda para saltar;cuerda;15.000000;107461;8

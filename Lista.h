@@ -136,22 +136,25 @@ void Lista<T, NADA>::eliminaInicial() {
 template <typename T, T NADA>
 void Lista<T, NADA>::eliminaPos(uint pos) {
 
-    //Revisar esto
-    if (pos > lon) return;
-    if (pos == 0)
-        eliminaInicial();
+    // Cambiamos a >= para evitar desbordamientos
+    if (pos >= lon) return;
 
+    if (pos == 0) {
+        eliminaInicial();
+    }
     else {
         Nodo* aux = ini;
-        Nodo* aux2 = ini;
-        for (int i = 0; i != pos; i++)
-        {
+        Nodo* aux2 = nullptr; // aux2 será el nodo anterior
+
+        for (int i = 0; i < pos; i++) {
             aux2 = aux;
             aux = aux->sig;
         }
-        aux2 = aux->sig;
-        aux->sig = nullptr;
-        delete aux;
+
+        // CORRECCIÓN: Conectamos el puntero 'sig' del nodo anterior al siguiente nodo
+        aux2->sig = aux->sig;
+
+        delete aux; // Borramos el nodo de la memoria
         lon--;
     }
 }

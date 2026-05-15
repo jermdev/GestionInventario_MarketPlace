@@ -113,7 +113,7 @@ public:
 		pedidoService->setPedidos(pedidos);
 	}
 
-	void listarPedidos() {
+	void listarPedidos(int idCliente) {
 
 		Lista<Pedido*>* todosLosPedidos = pedidoService->obtenerPedidosHistoricos();
 
@@ -126,7 +126,10 @@ public:
 
 	// (El más antiguo entra primero)
 		for (int i = 0; i < todosLosPedidos->longitud(); i++) {
-			colaDePedidos.enqueue(todosLosPedidos->obtenerPos(i));
+			if (todosLosPedidos->obtenerPos(i)->getIdCliente() == idCliente) {
+
+				colaDePedidos.enqueue(todosLosPedidos->obtenerPos(i));
+			}
 		}
 
 		cout << "\n--- BANDEJA DE PEDIDOS (Orden de llegada) ---" << endl;
@@ -164,17 +167,20 @@ public:
 			}
 		}
 	}
-	void eliminarProductosPorVendedor(int idVendedor,int idProducto) {
-		Lista<Producto*>* productos = productoService->obtenerPorductosPorCondicion(0, [idVendedor](Producto* p) { return p->getIdVendedor() == idVendedor; });
-		
-		for (int i = 0; i < productos->longitud(); i++) {
-			if (productos->obtenerPos(i)->getIdVendedor() == idVendedor && productos->obtenerPos(i)->getId()==idProducto) {
-				
-				productoService->eliminarProducto(idProducto);
-			}
-			else {
-				cout << "No hay producto a eliminar" << endl;
-			}
+	void eliminarProductosPorVendedor(int idVendedor, int idProducto) {
+		// Buscamos directamente el producto validando que exista y le pertenezca a este vendedor
+		Producto* p = productoService->buscarProductoPorId(0, [idVendedor, idProducto](Producto* prod) {
+			return prod->getId() == idProducto && prod->getIdVendedor() == idVendedor;
+			});
+
+		if (p != nullptr) {
+			// Si lo encuentra, lo elimina
+			productoService->eliminarProducto(idProducto);
+			cout << "Producto eliminado exitosamente." << endl;
+		}
+		else {
+			// Si no lo encuentra, o si el producto es de otro vendedor
+			cout << "Error: No se encontro el producto o no te pertenece." << endl;
 		}
 	}
 	Lista<Producto*>* obtenerListaProductosVendedor(int idVendedor) {

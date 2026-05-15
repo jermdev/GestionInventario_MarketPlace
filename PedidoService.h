@@ -237,13 +237,6 @@ public:
                                     np->cantidad = cantidad;
 
                                     productosDelPedido->agregaFinal(np);
-                                } else {
-                                    // crear placeholder para conservar id y cantidad
-                                    Producto* placeholder = new Producto("desconocido", "desconocido", 0.0, idProducto, 0, 0);
-                                    NProductos* np = new NProductos();
-                                    np->producto = placeholder;
-                                    np->cantidad = cantidad;
-                                    productosDelPedido->agregaFinal(np);
                                 }
                             }
                         }
