@@ -77,10 +77,6 @@ public:
 		int nProductos = productos->longitud();
 		NProductos* aux = productos->obtenerInicial();
 		for (int i = 0; i < nProductos; i++) {
-			if (aux == nullptr) {
-				cout << "Elemento con el id: " << id << " no encontrado.";
-				return;
-			}
 
 			if (aux->producto->getId() == id) {
 
@@ -93,12 +89,16 @@ public:
 					aux->cantidad -= cantidad;
 					cout << "Se eliminaron " << cantidad << " " << aux->producto->getNombre();
 				}
-				else {
+				if(aux->cantidad<cantidad) {
 					cout << "La cantidad de productos a eliminar no valida.";
 				}
 
 				return;
 
+			}
+			else {
+				cout << "Elemento con el id: " << id << " no encontrado.";
+				return;
 			}
 			aux = productos->obtenerPos(i + 1);
 

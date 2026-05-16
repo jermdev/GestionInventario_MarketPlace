@@ -147,6 +147,10 @@ class ClienteUI {
                 }
                 break;
             case 3:
+                if (cli->getCarrito()->getProductos()->esVacia()) {
+                    cout << "Tu carrito esta vacio. No puedes eliminar.\n";
+                    break;
+                }
                 cout << "Ingrese el ID del producto a eliminar: ";
                 cin >> id;
                 cout << "Ingrese la cantidad a eliminar: ";

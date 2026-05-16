@@ -38,6 +38,7 @@ public:
 		else {
 			cout << "Tarjeta de Regalo." << endl;
 		}
+		verPago();
 	}
 
 	void verPago() {
