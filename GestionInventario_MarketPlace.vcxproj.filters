@@ -134,6 +134,24 @@
     <ClInclude Include="PedidoService.h">
       <Filter>service</Filter>
     </ClInclude>
+    <ClInclude Include="ClienteService.h">
+      <Filter>service</Filter>
+    </ClInclude>
+    <ClInclude Include="VendedorService.h">
+      <Filter>service</Filter>
+    </ClInclude>
+    <ClInclude Include="AdministradorService.h">
+      <Filter>service</Filter>
+    </ClInclude>
+    <ClInclude Include="Administrador.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="AdministradorBuilder.h">
+      <Filter>builders</Filter>
+    </ClInclude>
+    <ClInclude Include="parseRol.h">
+      <Filter>utils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GestionInventario_MarketPlace.cpp">

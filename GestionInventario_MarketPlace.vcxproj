@@ -123,7 +123,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Administrador.h" />
+    <ClInclude Include="AdministradorBuilder.h" />
+    <ClInclude Include="AdministradorService.h" />
     <ClInclude Include="Auth.h" />
+    <ClInclude Include="ClienteService.h" />
     <ClInclude Include="Cola.h" />
     <ClInclude Include="CompraService.h" />
     <ClInclude Include="Envio.h" />
@@ -150,12 +154,14 @@
     <ClInclude Include="ProductoService.h" />
     <ClInclude Include="Registrar.h" />
     <ClInclude Include="Resource.h" />
+    <ClInclude Include="parseRol.h" />
     <ClInclude Include="UserBuilder.h" />
     <ClInclude Include="UserRepository.h" />
     <ClInclude Include="Usuario.h" />
     <ClInclude Include="UsuarioService.h" />
     <ClInclude Include="Vendedor.h" />
     <ClInclude Include="VendedoresBuilder.h" />
+    <ClInclude Include="VendedorService.h" />
     <ClInclude Include="VendedorUI.h" />
   </ItemGroup>
   <ItemGroup>

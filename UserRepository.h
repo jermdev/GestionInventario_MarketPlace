@@ -5,8 +5,12 @@
 #include "Usuario.h"
 #include "Cliente.h"
 #include "Vendedor.h"
+#include "Administrador.h"
 #include "ClienteBuilder.h"
 #include "VendedoresBuilder.h"
+#include "AdministradorBuilder.h"
+
+#include "parseRol.h"
 using namespace std;
 
 class UsuarioRepository {
@@ -32,7 +36,7 @@ private:
 
     // Carga todos los registros de un archivo.
     // esCliente=true → construye Clientes, false → Vendedores.
-    Lista<Usuario*>* cargarDesdeArchivo(const string& ruta, bool esCliente) {
+    Lista<Usuario*>* cargarDesdeArchivo(const string& ruta, ROL rol) {
         Lista<Usuario*>* lista = new Lista<Usuario*>();
         ifstream archivo(ruta, ios::binary | ios::in);
         if (!archivo.is_open()) return lista;
@@ -46,12 +50,20 @@ private:
             string correo = leerString(archivo);
             string direccion = leerString(archivo);
             string contrasenia = leerString(archivo);
+            string rolString = leerString(archivo);
+            string cargo;
             int extra = 0;
-            archivo.read(reinterpret_cast<char*>(&extra), sizeof(int));
+            if (stringToRol(rolString) == ROL::ADMINISTRADOR) {
+                archivo.read(reinterpret_cast<char*>(&cargo), sizeof(string));
+            }
+            else {
+
+                archivo.read(reinterpret_cast<char*>(&extra), sizeof(int));
+            }
             if (archivo.fail()) break;
 
             Usuario* u = nullptr;
-            if (esCliente) {
+            if (rol == ROL::CLIENTE) {
                 ClienteBuilder b;
                 
                 b.setId(id);
@@ -59,8 +71,10 @@ private:
                 b.setCorreo(correo);
                 b.setDireccion(direccion);
                 b.setContrasenia(contrasenia);
+                b.setRol(stringToRol(rolString));
+
                 u = b.build();
-            } else {
+            } else if (rol == ROL::VENDEDOR) {
                 VendedorBuilder b;
                 b.setNumeroEstrellas(extra);
                 b.setId(id);
@@ -68,7 +82,18 @@ private:
                 b.setCorreo(correo);
                 b.setDireccion(direccion);
                 b.setContrasenia(contrasenia);
+                b.setRol(stringToRol(rolString));
+
                 u = b.build();
+            }
+            else if (rol == ROL::ADMINISTRADOR) {
+                AdministradorBuilder b;
+                b.setId(id);
+                b.setNombre(nombre);
+                b.setCorreo(correo);
+                b.setDireccion(direccion);
+                b.setContrasenia(contrasenia);
+                b.setRol(stringToRol(rolString));
             }
             if (u != nullptr)
                 lista->agregaFinal(u);
@@ -93,6 +118,7 @@ public:
         escribirString(archivo, cliente->getCorreo());
         escribirString(archivo, cliente->getDireccion());
         escribirString(archivo, cliente->getContrasenia());
+        escribirString(archivo, rolToString(cliente->getRol()));// verificar que se guarda correctamente
         int extra = cliente->getNumeroCompras();
         archivo.write(reinterpret_cast<const char*>(&extra), sizeof(int));
     }
@@ -106,15 +132,29 @@ public:
         escribirString(archivo, vendedor->getCorreo());
         escribirString(archivo, vendedor->getDireccion());
         escribirString(archivo, vendedor->getContrasenia());
+        escribirString(archivo, rolToString(vendedor->getRol()));// verificar que se guarda correctamente
         int extra = vendedor->getNumeroEstrellas();
         archivo.write(reinterpret_cast<const char*>(&extra), sizeof(int));
     }
 
+    void guardarAdministrador(Administrador* administrador) {
+        ofstream archivo(rutaVendedores, ios::binary | ios::out | ios::app);
+        if (!archivo.is_open()) return;
+        int id = administrador->getId();
+        archivo.write(reinterpret_cast<const char*>(&id), sizeof(int));
+        escribirString(archivo, administrador->getNombre());
+        escribirString(archivo, administrador->getCorreo());
+        escribirString(archivo, administrador->getDireccion());
+        escribirString(archivo, administrador->getContrasenia());
+        escribirString(archivo, rolToString(administrador->getRol()));// verificar que se guarda correctamente
+        string extra = administrador->getCargo();
+        archivo.write(reinterpret_cast<const char*>(&extra), sizeof(string));
+    }
     // Busca por correo en ambos archivos.
     // Retorna puntero heap-allocated — el CALLER es dueno y debe hacer delete.
     // Retorna nullptr si no se encuentra.
     Usuario* buscarPorCorreo(const string& correo) {
-       Lista<Usuario*>* clientes = cargarDesdeArchivo(rutaClientes, true);
+       Lista<Usuario*>* clientes = cargarDesdeArchivo(rutaClientes, ROL::CLIENTE);
 
         Usuario* encontrado = nullptr;
 
@@ -136,7 +176,7 @@ public:
             }
 
     // ===== VENDEDORES =====
-        Lista<Usuario*>* vendedores = cargarDesdeArchivo(rutaVendedores, false);
+        Lista<Usuario*>* vendedores = cargarDesdeArchivo(rutaVendedores, ROL::VENDEDOR);
 
         for (uint i = 0; i < vendedores->longitud(); i++) {
             Usuario* u = vendedores->obtenerPos(i);
@@ -157,8 +197,8 @@ public:
     // Carga todos los usuarios de ambos archivos en una sola lista.
     // El CALLER es dueno de la lista y de todos los elementos dentro.
     Lista<Usuario*>* cargarTodos() {
-        Lista<Usuario*>* todos      = cargarDesdeArchivo(rutaClientes,   true);
-        Lista<Usuario*>* vendedores = cargarDesdeArchivo(rutaVendedores, false);
+        Lista<Usuario*>* todos      = cargarDesdeArchivo(rutaClientes,   ROL::CLIENTE);
+        Lista<Usuario*>* vendedores = cargarDesdeArchivo(rutaVendedores, ROL::VENDEDOR);
         for (uint i = 0; i < vendedores->longitud(); i++)
             todos->agregaFinal(vendedores->obtenerPos(i));
         while (!vendedores->esVacia()) vendedores->eliminaInicial();

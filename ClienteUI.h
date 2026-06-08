@@ -1,13 +1,12 @@
 #pragma once
-#include "Cliente.h"
-#include "UsuarioService.h"
 #include <iostream>
+#include "ClienteService.h"
 using namespace std;
 
 class ClienteUI {
 
 
-    static void menuVerProductos(UsuarioService* uService) {
+    static void menuVerProductos(ClienteService* uService) {
         int opcion;
         system("cls");
         do {
@@ -56,7 +55,7 @@ class ClienteUI {
         } while (opcion != 0);
     }
 
-    static void menuBuscarProducto(Cliente* cli,UsuarioService* uService) {
+    static void menuBuscarProducto(Cliente* cli,ClienteService* uService) {
         int opcion;
         system("cls");
         do {
@@ -113,7 +112,7 @@ class ClienteUI {
         } while (opcion != 0);
     }
 
-    static void menuCarrito(Cliente* cli, UsuarioService* uService) {
+    static void menuCarrito(Cliente* cli, ClienteService* uService) {
         system("cls");
         int opcion, id, cant;
         do {
@@ -170,7 +169,7 @@ class ClienteUI {
         } while (opcion != 0);
     }
 
-    static void menuCompra(Cliente* cli, UsuarioService* uService) {
+    static void menuCompra(Cliente* cli, ClienteService* uService) {
         system("cls");
         int opcion, mPago, tComp;
         do {
@@ -206,7 +205,7 @@ class ClienteUI {
         } while (opcion != 0);
     }
 
-    static void menuHistorialPedidos(Cliente* cli, UsuarioService* uService) {
+    static void menuHistorialPedidos(Cliente* cli, ClienteService* uService) {
         int opcion;
         system("cls");
         do {
@@ -233,7 +232,7 @@ class ClienteUI {
     }
     public:
     static void Render(Cliente* cli) {
-        UsuarioService* uService = new UsuarioService();
+        ClienteService* uService = new ClienteService();
         uService->inicializarListaProductos();
         uService->InicializarPedidosPorIdCliente(cli->getId());
         int opcion;

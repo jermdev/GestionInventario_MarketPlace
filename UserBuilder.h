@@ -13,10 +13,11 @@ protected:
     string correo;
     string direccion;
     string contrasenia;
+    ROL rol;
 
 public:
     UsuarioBuilder()
-        : id(0), nombre(""), correo(""), direccion(""), contrasenia("")
+        : id(0), nombre(""), correo(""), direccion(""), contrasenia(""), rol(ROL::NONE)
     {}
 
     virtual ~UsuarioBuilder() {}
@@ -41,10 +42,14 @@ public:
         this->contrasenia = contrasenia;
     }
 
+    void setRol(const ROL& rol) {
+        this->rol = rol;
+    }
     // Limpia todos los campos acumulados para reusar el builder.
     void reset() {
         id = 0;
         nombre = correo = direccion = contrasenia = "";
+        rol = ROL::NONE;
     }
 
     // Construye el objeto Usuario concreto. El CALLER es dueno del puntero devuelto.

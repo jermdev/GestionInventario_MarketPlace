@@ -28,6 +28,7 @@ public:
         v->setCorreo(correo);
         v->setDireccion(direccion);
         v->setContrasenia(contrasenia);
+        v->setRol(rol);
         reset();
         numeroEstrellas = 0;
         return v;
