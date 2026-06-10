@@ -28,6 +28,7 @@ public:
     // Cada subclase declara su tipo y un ID numerico para serializar/discriminar.
     virtual string getTipoUsuario() const = 0;
     virtual int getTipoId() const = 0;
+    virtual void mostrarUsuario() const = 0;
 
     // Getters
     int getId() { return id; }
