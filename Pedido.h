@@ -67,7 +67,7 @@ public:
 		cout << endl;
 
 		int cantidadItems = productosComprados->longitud();
-		cout << "Cantidad de líneas de pedido: " << cantidadItems << endl;
+		cout << "Cantidad de lineas de pedido: " << cantidadItems << endl;
 		for (int i = 0; i < cantidadItems; ++i) {
 			NProductos* np = productosComprados->obtenerPos(i);
 			if (np == nullptr) continue;

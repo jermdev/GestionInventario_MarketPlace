@@ -61,7 +61,7 @@ class ClienteUI {
         system("cls");
         do {
             cout << "\n====== BUSCAR PRODUCTO ======\n";
-            cout << "1. Digite el Id del Producto:\n";
+            cout << "1. Buscar por ID:\n";
             cout << "0. Volver\n";
             cout << "Seleccione una opcion: ";
             cin >> opcion;
@@ -172,7 +172,7 @@ class ClienteUI {
 
     static void menuCompra(Cliente* cli, UsuarioService* uService) {
         system("cls");
-        int opcion, mPago, tComp;
+        int opcion, mPago, tComp; char tar; string numTar,cvv;
         do {
             cout << "\n====== REALIZAR COMPRA ======\n";
             cout << "1. Confirmar compra\n";
@@ -191,7 +191,27 @@ class ClienteUI {
                 cin >> mPago;
                 cout << "Tipo Comprobante (0: Boleta, 1: Factura): ";
                 cin >> tComp;
+                cout << "Ingrese su numero de tarjeta: ";
+                cin >> numTar;
+                cout << "Ingrese su CVV: ";
+                while (true) {
+                    tar = _getch();
 
+                    if (tar == '\r') {
+                        break;
+                    }
+                    else if (tar == '\b') {
+                        if (cvv.length() > 0) {
+                            cvv.pop_back();
+                            cout << "\b \b";
+                        }
+                    }
+                    else {
+                        cvv += tar;
+                        cout << "*";
+                    }
+                }
+                //FALTA IMPLEMENTAR QUE APAREZCA LA TARJETA
                 uService->realizarCompraProductos(cli->getId(),cli,static_cast<MetodoPago>(mPago),static_cast<TipoComprobante>(tComp) );
                 break;
             case 2:
