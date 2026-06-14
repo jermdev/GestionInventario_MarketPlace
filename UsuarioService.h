@@ -48,10 +48,13 @@ public:
     }
 
     // Buscar por correo — devuelve puntero heap (caller es dueño)
-    Usuario* buscarPorCorreo(const string& correo) {
-        return usuarioRepository->buscarPorCorreo(correo);
-    }
 
+    Usuario* buscarPorCorreo(const string& correo) {
+        return usuarioRepository->buscarPorCondicion([correo](Usuario* u) {return u->getCorreo() == correo; });
+    }
+    Usuario* buscarPorID(const int& id) {
+        return usuarioRepository->buscarPorCondicion([id](Usuario* u) {return u->getId() == id; });
+    }
     // Devuelve lista heap-allocated con todos los usuarios (caller debe liberar)
     Lista<Usuario*>* obtenerTodos() {
         return usuarioRepository->cargarTodos();

@@ -20,6 +20,13 @@ public:
 	~AdministradorService () {
 	}
 
+
+	void inicializarTodosLosProductos() { productoService->iniciaizarProductos(); }
+
+
+	Lista<Pedido*>* obtenerPedidos() { pedidoService->obtenerPedidosHistoricos(); }
+	Lista<Usuario*>* obtenerUsuarios() { usuarioService->obtenerTodos(); }
+
 	void MostrarUsuarioPorCorreo(string correo) {
 		Usuario* u = usuarioService->buscarPorCorreo(correo);
 		cout << "\n************************\n";
@@ -45,6 +52,20 @@ public:
 		}
 		else {
 			cout << "\nError al eliminar el usuario con el correo: " << correo << " verifique que el correo sea correcto.";
+		}
+	}
+
+	void verProductos() {
+		productoService->mostrarInventario();
+	}
+
+	void verPedidos() {
+		Lista<Pedido*>* pedidos  = obtenerPedidos();
+		int nPedidos = pedidos->longitud();
+		for (int i = 0; i < nPedidos; i++) {
+			Usuario* u = usuarioService->buscarPorCorreo
+
+
 		}
 	}
 };

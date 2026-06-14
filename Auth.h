@@ -123,7 +123,7 @@ public:
             usuarioActual = nullptr;
         }
 
-        Usuario* u = repo->buscarPorCorreo(correo);
+        Usuario* u = repo->buscarPorCondicion([correo](Usuario* u) {return u->getCorreo() == correo; });
         if (u == nullptr)
             return CREDENCIALES_INVALIDAS;
 

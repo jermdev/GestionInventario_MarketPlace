@@ -211,7 +211,9 @@ public:
     // Busca por correo en ambos archivos.
     // Retorna puntero heap-allocated — el CALLER es dueno y debe hacer delete.
     // Retorna nullptr si no se encuentra.
-    Usuario* buscarPorCorreo(const string& correo) {
+    
+    template<typename F>
+    Usuario* buscarPorCondicion(F condicion) {
         // ===== CLIENTES =====
         Lista<Usuario*>* clientes = cargarDesdeArchivo(rutaClientes, ROL::CLIENTE);
 
@@ -220,7 +222,7 @@ public:
         for (uint i = 0; i < clientes->longitud(); i++) {
             Usuario* u = clientes->obtenerPos(i);
 
-            if (u != nullptr && u->getCorreo() == correo) {
+            if (u != nullptr && condicion(u)) {
                 encontrado = u;
             }
             else {
@@ -239,7 +241,7 @@ public:
         for (uint i = 0; i < vendedores->longitud(); i++) {
             Usuario* u = vendedores->obtenerPos(i);
 
-            if (u != nullptr && u->getCorreo() == correo) {
+            if (u != nullptr && condicion(u)) {
                 encontrado = u;
             }
             else {
@@ -253,7 +255,7 @@ public:
         Lista<Usuario*>* administradores = cargarDesdeArchivo(rutaAdministradores, ROL::ADMINISTRADOR);
         for (uint i = 0; i < administradores->longitud(); i++) {
             Usuario* u = administradores->obtenerPos(i);
-            if (u != nullptr && u->getCorreo() == correo) {
+            if (u != nullptr && condicion(u)) {
                 encontrado = u;
             }
             else {
@@ -300,7 +302,7 @@ public:
     }
 
     bool correoExiste(const string& correo) {
-        Usuario* u = buscarPorCorreo(correo);
+        Usuario* u = buscarPorCondicion([correo](Usuario* u) {return u->getCorreo() == correo; });
         if (u != nullptr) {
             delete u;
             return true;

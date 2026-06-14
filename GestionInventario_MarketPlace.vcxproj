@@ -126,6 +126,7 @@
     <ClInclude Include="Administrador.h" />
     <ClInclude Include="AdministradorBuilder.h" />
     <ClInclude Include="AdministradorService.h" />
+    <ClInclude Include="AdministradorUI.h" />
     <ClInclude Include="Auth.h" />
     <ClInclude Include="ClienteService.h" />
     <ClInclude Include="Cola.h" />
