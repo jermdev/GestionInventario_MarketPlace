@@ -25,32 +25,62 @@ class AdministradorUI {
         } while (opcion != 0);
     }
 
-
-    
-
-    
-
 public:
-    static void Render(Cliente* cli) {
+    static void Render(Administrador* admin) {
         AdministradorService* uService = new AdministradorService();
         uService->inicializarTodosLosProductos();
 
-        
         int opcion;
         do {
-            cout << "\n====== MENU CLIENTE ======\n";
+            cout << "\n====== MENU ADMINISTRADOR ======\n";
             cout << "1. Ver Productos\n";
-            cout << "2. Buscar Producto\n";
-            cout << "3. Ver Carrito\n";
-            cout << "4. Realizar Compra\n";
-            cout << "5. Ver Historial de Pedidos\n";
+            cout << "2. Editar Productos\n";
+            cout << "3. Borrar Productos\n";
+            cout << "4. Ver Usuario\n";
+            cout << "5. Editar Usuario\n";
+            cout << "6. Borrar Usuario\n";
+            cout << "7. Ver Pedidos\n";
+            cout << "8. Editar Pedidos\n";
+            cout << "9. Borrar Pedidos\n";
             cout << "0. Cerrar Sesion\n";
             cout << "Seleccione una opcion: ";
             cin >> opcion;
 
             switch (opcion) {
+            
+            case 1:
+                uService->mostrarTodosLosProductos();
+                break;
+            
+            case 2:
 
-           
+                break;
+
+            case 3:
+                
+                break;
+
+            case 4:
+                uService->mostrarTodosLosUsuarios();
+                break;
+
+            case 5:
+
+                break;
+
+            case 6:
+
+                break;
+
+            case 7: {
+                string correo;
+                cout << "Dijite la categoria que quiere buscar: "; cin >> correo;
+                uService->verPedidos(correo);
+                break;
+            }
+            case 8:
+
+                break;
 
             case 0:
                 cout << "Cerrando sesion...\n";

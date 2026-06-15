@@ -24,8 +24,20 @@ public:
 	void inicializarTodosLosProductos() { productoService->iniciaizarProductos(); }
 
 
-	Lista<Pedido*>* obtenerPedidos() { pedidoService->obtenerPedidosHistoricos(); }
-	Lista<Usuario*>* obtenerUsuarios() { usuarioService->obtenerTodos(); }
+	Lista<Pedido*>* obtenerPedidos() { return pedidoService->obtenerPedidosHistoricos(); }
+	Lista<Usuario*>* obtenerUsuarios() { return usuarioService->obtenerTodos(); }
+
+	void mostrarTodosLosProductos() {
+		productoService->mostrarInventario();
+		system("pause");
+	}
+	void mostrarTodosLosUsuarios() {
+
+		obtenerUsuarios();
+
+		system("pause");
+	}
+
 
 	void MostrarUsuarioPorCorreo(string correo) {
 		Usuario* u = usuarioService->buscarPorCorreo(correo);
@@ -55,16 +67,18 @@ public:
 		}
 	}
 
-	void verProductos() {
-		productoService->mostrarInventario();
-	}
-
-	void verPedidos() {
+	void verPedidos(string correo) {
 		Lista<Pedido*>* pedidos  = obtenerPedidos();
 		int nPedidos = pedidos->longitud();
 		for (int i = 0; i < nPedidos; i++) {
-			Usuario* u = usuarioService->buscarPorCorreo
-
+			Usuario* u = usuarioService->buscarPorCorreo(correo);
+			if (u != nullptr) {
+				u->mostrarUsuario();
+				pedidos->obtenerPos(i)->mostrarDetallePedido();
+			}
+			else {
+				cout << "No hay pedidos"<<endl;
+			}
 
 		}
 	}

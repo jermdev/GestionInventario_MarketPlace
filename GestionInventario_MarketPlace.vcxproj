@@ -185,6 +185,7 @@
     <Text Include="productos.txt" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="administradores.bin" />
     <None Include="clientes.bin" />
     <None Include="vendedores.bin" />
   </ItemGroup>

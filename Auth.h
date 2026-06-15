@@ -46,7 +46,7 @@ public:
         if (repo->correoExiste(correo))
             return CORREO_DUPLICADO;
 
-        int    nuevoId = repo->generarNuevoId();
+        int nuevoId = repo->generarNuevoId();
 
         ClienteBuilder b;
         Usuario* u = nullptr;

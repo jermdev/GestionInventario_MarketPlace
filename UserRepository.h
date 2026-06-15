@@ -55,7 +55,7 @@ private:
             string cargo;
             int extra = 0;
             if (stringToRol(rolString) == ROL::ADMINISTRADOR) {
-                archivo.read(reinterpret_cast<char*>(&cargo), sizeof(string));
+                cargo = leerString(archivo);
             }
             else {
 
@@ -95,6 +95,8 @@ private:
                 b.setDireccion(direccion);
                 b.setContrasenia(contrasenia);
                 b.setRol(stringToRol(rolString));
+                
+                u = b.build();
             }
             if (u != nullptr)
                 lista->agregaFinal(u);
@@ -196,7 +198,7 @@ public:
     }
 
     void guardarAdministrador(Administrador* administrador) {
-        ofstream archivo(rutaVendedores, ios::binary | ios::out | ios::app);
+        ofstream archivo(rutaAdministradores, ios::binary | ios::out | ios::app);
         if (!archivo.is_open()) return;
         int id = administrador->getId();
         archivo.write(reinterpret_cast<const char*>(&id), sizeof(int));
@@ -206,7 +208,7 @@ public:
         escribirString(archivo, administrador->getContrasenia());
         escribirString(archivo, rolToString(administrador->getRol()));// verificar que se guarda correctamente
         string extra = administrador->getCargo();
-        archivo.write(reinterpret_cast<const char*>(&extra), sizeof(string));
+        escribirString(archivo, extra);
     }
     // Busca por correo en ambos archivos.
     // Retorna puntero heap-allocated — el CALLER es dueno y debe hacer delete.
