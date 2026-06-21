@@ -130,10 +130,12 @@
     <ClInclude Include="Auth.h" />
     <ClInclude Include="ClienteService.h" />
     <ClInclude Include="Cola.h" />
+    <ClInclude Include="ComponenteUI.h" />
     <ClInclude Include="CompraService.h" />
     <ClInclude Include="Envio.h" />
     <ClInclude Include="fechas.h" />
     <ClInclude Include="GestorDeArchivos.h" />
+    <ClInclude Include="GridView.h" />
     <ClInclude Include="HashUtils.h" />
     <ClInclude Include="AuthUI.h" />
     <ClInclude Include="Carrito.h" />

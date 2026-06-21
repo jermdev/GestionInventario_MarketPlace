@@ -1,6 +1,9 @@
 #pragma once
 #include <iostream>
 #include "ClienteService.h"
+#include "ComponenteUI.h"
+#include "GridView.h"
+#include "Producto.h"
 using namespace std;
 
 class ClienteUI {
@@ -22,9 +25,86 @@ class ClienteUI {
 
             switch (opcion) {
             case 1:
-               
-                uService->mostrarTodosLosProductos();
+            {
+                system("cls");
+
+                Lista<Producto*>* productos = uService->obtenerProductos();
+
+                Lista<ComponenteUI<Producto*>*>* cardProductos = new Lista<ComponenteUI<Producto*>*>();
+                for (int i = 0; i < productos->longitud(); i++) {
+                    Producto* p = productos->obtenerPos(i);
+                    ComponenteUI<Producto*>* card = new ComponenteUI<Producto*>(p);
+                    cardProductos->agregaInicial(card);
+                }
+
+                CONSOLE_SCREEN_BUFFER_INFO csbi;
+
+                GetConsoleScreenBufferInfo(
+                    GetStdHandle(STD_OUTPUT_HANDLE),
+                    &csbi
+                );
+
+                int ancho =
+                    csbi.srWindow.Right -
+                    csbi.srWindow.Left + 1;
+
+                int alto =
+                    csbi.srWindow.Bottom -
+                    csbi.srWindow.Top + 1;
+
+                int x = (ancho / 15);
+                int y = (alto / 7);
+
+                GridView<Producto*> *gridProductos = new GridView<Producto*>(cardProductos,x,y, ancho, alto, 21, 6);
+                auto dibujado = [](Producto* p, auto posicion) {
+
+                    int aumentFila = 0;
+
+                    posicion(0);
+                    cout << "-------------------" << endl;
+
+                    posicion(1);
+
+                    string nombre = p->getNombre();
+                    string auxNombre = "";
+
+                    if (nombre.length() > 11) {
+                        auxNombre = nombre.substr(11);   // resto
+                        nombre = nombre.substr(0, 11);   // primera parte
+                    }
+
+                    cout << "Nombre: " << nombre << endl;
+
+                    if (auxNombre.length() > 0) {
+                        posicion(2);
+                        cout << auxNombre << endl;
+                        aumentFila++;
+                    }
+
+                    posicion(2 + aumentFila);
+                    cout << "Precio: " << p->getPrecio() << endl;
+
+                    string categoria = p->getCategoria();
+                    string auxCategoria = "";
+
+                    if (categoria.length() > 11) {
+                        auxCategoria = categoria.substr(11);
+                        categoria = categoria.substr(0, 11);
+                    }
+
+                    posicion(3 + aumentFila);
+                    cout << "Categoria: " << categoria << endl;
+
+                    if (auxCategoria.length() > 0) {
+                        posicion(4 + aumentFila);
+                        cout << auxCategoria << endl;
+                        aumentFila++;
+                    }
+                    };
+                gridProductos->mostrarGrid(dibujado);
+                system("pause");
                 break;
+            }
 
             case 2: {
                 string categoria;

@@ -103,6 +103,10 @@ public:
 		system("pause");
 	}
 
+	Lista<Producto*>* obtenerProductos() {
+		return productoService->obtenerPorductosPorCondicion(0, [](Producto* p) { return true; });
+	}
+
 	//Inicializar Pedidos
 
 	void InicializarPedidosPorIdCliente(int idCLiente) {

@@ -30,6 +30,9 @@
     <Filter Include="Archivos">
       <UniqueIdentifier>{53c612d5-f751-467c-a2a4-8ca32788ef21}</UniqueIdentifier>
     </Filter>
+    <Filter Include="UI\Component">
+      <UniqueIdentifier>{1e183e09-e94b-4b48-b589-36449c11d96f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Resource.h">
@@ -155,6 +158,12 @@
     <ClInclude Include="AdministradorUI.h">
       <Filter>UI</Filter>
     </ClInclude>
+    <ClInclude Include="GridView.h">
+      <Filter>UI\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponenteUI.h">
+      <Filter>UI\Component</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GestionInventario_MarketPlace.cpp">
@@ -176,5 +185,6 @@
   <ItemGroup>
     <None Include="clientes.bin" />
     <None Include="vendedores.bin" />
+    <None Include="administradores.bin" />
   </ItemGroup>
 </Project>

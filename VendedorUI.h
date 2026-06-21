@@ -46,7 +46,7 @@ class VendedorUI {
                 }
 
                 cout << "\n--- Mostrando productos en Cola (FIFO) ---\n";
-                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                while (cin.get() != '\n') {}
 
                 while (!colaProductos.esVacia()) {
                     Producto* p = colaProductos.dequeue();
