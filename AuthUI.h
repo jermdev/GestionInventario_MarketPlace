@@ -5,6 +5,7 @@
 #include "Registrar.h"
 #include "ClienteUI.h"
 #include "VendedorUI.h"
+#include"AdministradorUI.h"
 using namespace std;
 
 class AuthUI {
@@ -34,9 +35,14 @@ public:
                         ClienteUI::Render(c);
                         u = nullptr;
                     }
-                    else {
+                    else if(tipo==2) {
                         Vendedor* v = dynamic_cast<Vendedor*>(u);
                         VendedorUI::Render(v);
+                        u = nullptr;
+                    }
+                    else {
+                        Administrador* a = dynamic_cast<Administrador*>(u);
+                        AdministradorUI::Render(a);
                         u = nullptr;
                     }
                     //auth->cerrarSesion();

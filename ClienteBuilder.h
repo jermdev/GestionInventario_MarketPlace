@@ -21,6 +21,7 @@ public:
         c->setCorreo(correo);
         c->setDireccion(direccion);
         c->setContrasenia(contrasenia);
+        c->setRol(rol);
         reset();
         return c;
     }

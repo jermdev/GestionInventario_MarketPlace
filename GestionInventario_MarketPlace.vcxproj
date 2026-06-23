@@ -123,12 +123,19 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Administrador.h" />
+    <ClInclude Include="AdministradorBuilder.h" />
+    <ClInclude Include="AdministradorService.h" />
+    <ClInclude Include="AdministradorUI.h" />
     <ClInclude Include="Auth.h" />
+    <ClInclude Include="ClienteService.h" />
     <ClInclude Include="Cola.h" />
+    <ClInclude Include="ComponenteUI.h" />
     <ClInclude Include="CompraService.h" />
     <ClInclude Include="Envio.h" />
     <ClInclude Include="fechas.h" />
     <ClInclude Include="GestorDeArchivos.h" />
+    <ClInclude Include="GridView.h" />
     <ClInclude Include="HashUtils.h" />
     <ClInclude Include="AuthUI.h" />
     <ClInclude Include="Carrito.h" />
@@ -150,12 +157,14 @@
     <ClInclude Include="ProductoService.h" />
     <ClInclude Include="Registrar.h" />
     <ClInclude Include="Resource.h" />
+    <ClInclude Include="parseRol.h" />
     <ClInclude Include="UserBuilder.h" />
     <ClInclude Include="UserRepository.h" />
     <ClInclude Include="Usuario.h" />
     <ClInclude Include="UsuarioService.h" />
     <ClInclude Include="Vendedor.h" />
     <ClInclude Include="VendedoresBuilder.h" />
+    <ClInclude Include="VendedorService.h" />
     <ClInclude Include="VendedorUI.h" />
   </ItemGroup>
   <ItemGroup>
@@ -178,6 +187,7 @@
     <Text Include="productos.txt" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="administradores.bin" />
     <None Include="clientes.bin" />
     <None Include="vendedores.bin" />
   </ItemGroup>

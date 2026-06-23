@@ -1,13 +1,13 @@
 #pragma once
 #include <iostream>
 #include "Vendedor.h"
-#include "UsuarioService.h"
+#include "VendedorService.h"
 #include "Cola.h"
 using namespace std;
 
 class VendedorUI {
 
-    static void menuMisProductos(UsuarioService* uService, Vendedor* ven) {
+    static void menuMisProductos(VendedorService* uService, Vendedor* ven) {
         system("cls");
         int opcion, id = 0;
 
@@ -46,7 +46,7 @@ class VendedorUI {
                 }
 
                 cout << "\n--- Mostrando productos en Cola (FIFO) ---\n";
-                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                while (cin.get() != '\n') {}
 
                 while (!colaProductos.esVacia()) {
                     Producto* p = colaProductos.dequeue();
@@ -75,7 +75,7 @@ class VendedorUI {
         } while (opcion != 0);
     }
     
-    static void menuAgregarProducto(UsuarioService* uService, Vendedor *ven) {
+    static void menuAgregarProducto(VendedorService* uService, Vendedor *ven) {
         system("cls");
         string nombre, categoria;
         double precio;
@@ -108,7 +108,7 @@ class VendedorUI {
 
 public:
     static void Render(Vendedor* ven) {
-        UsuarioService* uService = new UsuarioService();
+        VendedorService* uService = new VendedorService();
         uService->inicializarListaProductos();
         int opcion;
         do {

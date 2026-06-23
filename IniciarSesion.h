@@ -40,7 +40,7 @@ public:
             }
 			cout << "\n";
             Auth::ResultadoLogin resultado = auth->iniciarSesion(correo, contrasenia);
-
+            
             if (resultado == Auth::LOGIN_EXITOSO) {
                 system("cls");
                 cout << "Bienvenido, " << auth->getUsuarioActual()->getNombre() << "!\n";

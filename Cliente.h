@@ -54,4 +54,12 @@ public:
             p->MostrarProducto();
         }
     }
+
+    void mostrarUsuario() const override {
+        cout << "ID:" << this->id<< endl ;
+        cout << "Nombre Completo: " << this->nombre << endl;
+        cout << "Tipo de usuario: " << getTipoUsuario() << endl;
+        cout << "Correo: " << this->correo;
+        cout << "Direccion: " << this->direccion;
+    }
 };

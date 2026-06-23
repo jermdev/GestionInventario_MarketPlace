@@ -12,6 +12,7 @@ public:
         cout << "Tipo de cuenta:\n";
         cout << "  1. Cliente\n";
         cout << "  2. Vendedor\n";
+        cout << "  3. Administrador\n";
         cout << "  0. Cancelar\n";
         cout << "Seleccione: ";
 
@@ -19,7 +20,7 @@ public:
         cin >> tipo;
 
         if (tipo == 0) return;
-        if (tipo != 1 && tipo != 2) {
+        if (tipo != 1 && tipo != 2 && tipo!=3) {
             cout << "Opcion no valida.\n";
             return;
         }
@@ -27,7 +28,7 @@ public:
         // Limpiar el '\n' que quedo en el buffer despues de cin >> tipo
         cin.ignore(numeric_limits<streamsize>::max(), '\n');
 
-        string nombre, correo, direccion, contrasenia;
+        string nombre, correo, direccion, contrasenia,cargo;
 		char ch;
 
         cout << "Nombre completo: ";
@@ -58,12 +59,20 @@ public:
                 cout << "*";
             }
         }
+        if (tipo == 3) {
+            cout << "\nCargo: ";
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            getline(cin, cargo);
+        }
+
         cout << "\n";
         Auth::ResultadoRegistro resultado;
         if (tipo == 1)
             resultado = auth->registrarCliente(nombre, correo, direccion, contrasenia);
-        else
+        else if (tipo == 2)
             resultado = auth->registrarVendedor(nombre, correo, direccion, contrasenia);
+        else
+            resultado = auth->registrarAdministrador(nombre, correo, direccion, contrasenia, cargo);
 
         switch (resultado) {
         case Auth::REGISTRO_EXITOSO:

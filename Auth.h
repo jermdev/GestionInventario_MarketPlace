@@ -3,6 +3,7 @@
 #include "UserRepository.h"
 #include "ClienteBuilder.h"
 #include "VendedoresBuilder.h"
+#include "AdministradorBuilder.h"
 #include "Usuario.h"
 using namespace std;
 
@@ -45,7 +46,7 @@ public:
         if (repo->correoExiste(correo))
             return CORREO_DUPLICADO;
 
-        int    nuevoId = repo->generarNuevoId();
+        int nuevoId = repo->generarNuevoId();
 
         ClienteBuilder b;
         Usuario* u = nullptr;
@@ -54,6 +55,7 @@ public:
         b.setCorreo(correo);
         b.setDireccion(direccion);
         b.setContrasenia(contrasenia);
+        b.setRol(ROL::CLIENTE);
         u = b.build();
 
         Cliente* c = dynamic_cast<Cliente*>(u);
@@ -78,12 +80,38 @@ public:
         b.setCorreo(correo);
         b.setDireccion(direccion);
         b.setContrasenia(contrasenia);
+        b.setRol(ROL::VENDEDOR);
         u = b.build();
 
         Vendedor* v = dynamic_cast<Vendedor*>(u);
         if (v == nullptr) { delete u; return REGISTRO_ERROR; }
 
         repo->guardarVendedor(v);
+        delete v;
+        return REGISTRO_EXITOSO;
+    }
+
+    ResultadoRegistro registrarAdministrador(string nombre, string correo, string direccion, string contrasenia, string cargo) {
+        if (repo->correoExiste(correo))
+            return CORREO_DUPLICADO;
+
+        int nuevoId = repo->generarNuevoId();
+
+        AdministradorBuilder b;
+        Usuario* u = nullptr;
+        b.setCargo(cargo);
+        b.setId(nuevoId);
+        b.setNombre(nombre);
+        b.setCorreo(correo);
+        b.setDireccion(direccion);
+        b.setContrasenia(contrasenia);
+        b.setRol(ROL::ADMINISTRADOR);
+        u = b.build();
+
+        Administrador* v = dynamic_cast<Administrador*>(u);
+        if (v == nullptr) { delete u; return REGISTRO_ERROR; }
+
+        repo->guardarAdministrador(v);
         delete v;
         return REGISTRO_EXITOSO;
     }
@@ -95,7 +123,7 @@ public:
             usuarioActual = nullptr;
         }
 
-        Usuario* u = repo->buscarPorCorreo(correo);
+        Usuario* u = repo->buscarPorCondicion([correo](Usuario* u) {return u->getCorreo() == correo; });
         if (u == nullptr)
             return CREDENCIALES_INVALIDAS;
 
