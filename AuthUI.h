@@ -1,64 +1,141 @@
 #pragma once
 #include <iostream>
+
 #include "Auth.h"
 #include "IniciarSesion.h"
 #include "Registrar.h"
 #include "ClienteUI.h"
 #include "VendedorUI.h"
-#include"AdministradorUI.h"
+#include "AdministradorUI.h"
+#include "gotoxy.h"
+
 using namespace std;
 
-class AuthUI {
-public:
-    // Punto de entrada principal de la aplicacion.
-    // Loop hasta que el usuario elija salir (opcion 0).
-    static void Render(Auth* auth) {
-        int opcion;
-        do {
-            cout << "\n============================\n";
-            cout << "     MARKET PLACE AMAZON\n";
-            cout << "============================\n";
-            cout << "1. Iniciar Sesion\n";
-            cout << "2. Registrarse\n";
-            cout << "0. Salir\n";
-            cout << "Seleccione una opcion: ";
-            cin >> opcion;
 
-            switch (opcion) {
-            case 1: {
-                bool ok = IniciarSesion::Render(auth);
-                if (ok && auth->hayUsuarioActivo()) {
-                    int tipo = auth->getUsuarioActual()->getTipoId();
-                    Usuario* u = auth->getUsuarioActual();
-                    if (tipo == 1) {
-                        Cliente* c = dynamic_cast<Cliente*>(u);
-                        ClienteUI::Render(c);
-                        u = nullptr;
-                    }
-                    else if(tipo==2) {
-                        Vendedor* v = dynamic_cast<Vendedor*>(u);
-                        VendedorUI::Render(v);
-                        u = nullptr;
-                    }
-                    else {
-                        Administrador* a = dynamic_cast<Administrador*>(u);
-                        AdministradorUI::Render(a);
-                        u = nullptr;
-                    }
-                    //auth->cerrarSesion();
+
+class AuthUI {
+private:
+    static void imprimirLogo(int x, int y) {
+        int recorridos = 0;
+        string logo[] = {
+        "\033[37m⠀⠀⢀⣀⣀⣀⣀⠀⠀⠀⠀⣀⣀⡀⢀⣀⣀⠀⠀⣀⣀⣀⠀⠀⠀⠀⠀⣀⣀⣀⣀⡀⠀⠀⠀⣀⣀⣀⣀⣀⡀⠀⠀⣀⣀⣀⠀⠀⠀⠀⢀⣀⣀⠀⣀⣀⣀⠀\033[0m",
+        "\033[37m⠀⣴⣿⡿⠿⢿⣿⣷⡀⠀⣿⣿⣿⣿⣿⣿⣷⣾⣿⣿⣿⣷⠀⢀⣾⣿⡿⠿⣿⣿⣧⠀⠀⠿⠿⠿⣿⣿⣿⠇⠀⣴⣿⡿⠿⣿⣿⣆⠀⢸⣿⣿⣿⣿⣿⣿⣆⠀\033[0m",
+        "\033[37m⠀⠉⢉⣁⣠⣼⣿⣿⡇⠀⣿⣿⡏⠀⠈⣿⣿⡇⠀⢹⣿⣿⠀⠈⠉⣉⣀⣤⣼⣿⣿⠀⠀⠀⠀⣴⣿⣿⠋⠀⢰⣿⣿⠁⠀⠀⢸⣿⣿⡄⢸⣿⣿⠃⠀⢹⣿⣿\033[0m",
+        "\033[37m⢀⣾⣿⡿⠛⢹⣿⣿⡇⠀⣿⣿⡇⠀⠀⣿⣿⡇⠀⢸⣿⣿⠀⢠⣾⣿⠟⠛⢹⣿⣿⠀⠀⢀⣾⣿⡿⠁⠀⠀⢸⣿⣿⠀⠀⠀⢀⣿⣿⡇⢸⣿⣿⠀⠀⢸⣿⣿\033[0m",
+        "\033[37m⢸⣿⣿⣇⣀⣼⣿⣿⣇⠀⣿⣿⡇⠀⠀⣿⣿⡇⠀⢸⣿⣿⠀⢸⣿⣿⣄⣀⣾⣿⣿⣄⠠⣿⣿⣿⣿⣷⣶⠀⠈⣿⣿⣧⣀⣼⣿⡿⠁⢸⣿⣿⠀⠀⢸⣿⣿⠀\033[0m",
+        "\033[37m⠀⠛⠿⠿⠿⠋⠹⠿⠋⠀⠿⠿⠇⠀⠀⠿⠿⠃⠀⠸⠿⠿⠀⠈⠻⠿⠿⠟⠋⠻⠟⠁⠀⠛⠉⠉⣉⠉⠛⠇⠀⠈⠻⠿⠿⠿⠛⠁⠀⠸⠿⠿⠀⠀⠸⠿⠟⠀\033[0m",
+        "\033[33m⠀⠀⠀⠀⠀⠀⠀⠀⠐⢶⣄⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠞⠛⠛⠻⣍⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\033[0m",
+        "\033[33m⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠻⢿⡒⠦⢤⣀⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⣠⠤⣶⡾⠃⢠⡿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\033[0m",
+        "\033[33m⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠓⠲⠤⣈⣉⠉⠙⠒⠒⠒⠒⠚⠛⠉⣉⣩⡤⠖⠋⠁⠀⠰⠿⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\033[0m",
+        "\033[33m⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠉⠉⠉⠛⠛⠛⠉⠉⠉⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\033[0m"
+        };
+        for (const string& linea : logo) {
+            gotoXY(x, y+recorridos);
+            cout << linea << endl;
+            recorridos++;
+        }
+    }
+public:
+
+    static void Render(Auth* auth) {
+
+        string opciones[] = {
+            "Iniciar Sesion",
+            "Registrarse",
+            "Salir"
+        };
+
+        const int totalOpciones = 3;
+        int seleccion = 0;
+
+        while (true) {
+
+            system("cls");
+
+            int centroX = 40;
+            int inicioY = 8;
+            int altoLogo = 12;
+
+            imprimirLogo(centroX - 12, inicioY - 3);
+
+            
+
+            for (int i = 0; i < totalOpciones; i++) {
+
+                gotoXY(centroX - 10, inicioY + i + altoLogo);
+
+                if (i == seleccion)
+                    cout << "> " << opciones[i];
+                else
+                    cout << "  " << opciones[i];
+            }
+
+            int tecla = _getch();
+
+            if (tecla == 224) {
+
+                tecla = _getch();
+
+                switch (tecla) {
+
+                case 72: // Flecha arriba
+                    seleccion--;
+                    if (seleccion < 0)
+                        seleccion = totalOpciones - 1;
+                    break;
+
+                case 80: // Flecha abajo
+                    seleccion++;
+                    if (seleccion >= totalOpciones)
+                        seleccion = 0;
+                    break;
                 }
-                break;
             }
-            case 2:
-                Registrar::Render(auth);
-                break;
-            case 0:
-                cout << "Hasta luego.\n";
-                break;
-            default:
-                cout << "Opcion no valida.\n";
-                break;
+            else if (tecla == 13) { // ENTER
+
+                switch (seleccion) {
+
+                case 0: {
+
+                    bool ok = IniciarSesion::Render(auth);
+
+                    if (ok && auth->hayUsuarioActivo()) {
+
+                        int tipo = auth->getUsuarioActual()->getTipoId();
+                        Usuario* u = auth->getUsuarioActual();
+
+                        if (tipo == 1) {
+
+                            Cliente* c = dynamic_cast<Cliente*>(u);
+                            ClienteUI::Render(c);
+
+                        }
+                        else if (tipo == 2) {
+
+                            Vendedor* v = dynamic_cast<Vendedor*>(u);
+                            VendedorUI::Render(v);
+
+                        }
+                        else {
+
+                            Administrador* a = dynamic_cast<Administrador*>(u);
+                            AdministradorUI::Render(a);
+
+                        }
+                    }
+
+                    break;
+                }
+
+                case 1:
+                    Registrar::Render(auth);
+                    break;
+
+                case 2:
+                    cout << "\nHasta luego.\n";
+                    return;
+                }
             }
-        } while (opcion != 0);
+        }
     }
 };

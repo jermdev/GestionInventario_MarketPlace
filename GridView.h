@@ -1,8 +1,8 @@
 #pragma once
 #include "Lista.h"
 #include "ComponenteUI.h"
-#include <windows.h>
 #include <iostream>
+#include "gotoxy.h"
 template <typename T>
 class GridView {
 private:
@@ -14,17 +14,7 @@ private:
     int espacioX;
     int espacioY;
 
-    static void gotoXY(int x, int y) {
-        COORD coord;
-        coord.X = x;
-        coord.Y = y;
-
-        SetConsoleCursorPosition(
-            GetStdHandle(STD_OUTPUT_HANDLE),
-            coord
-        );
-    }
-
+    
      void calculateGridGeometry() {
         if (anchoItem <= 0) anchoItem = 1;
         if (altoItem <= 0) altoItem = 1;

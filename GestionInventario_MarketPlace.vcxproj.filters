@@ -164,6 +164,9 @@
     <ClInclude Include="ComponenteUI.h">
       <Filter>UI\Component</Filter>
     </ClInclude>
+    <ClInclude Include="gotoxy.h">
+      <Filter>utils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GestionInventario_MarketPlace.cpp">

@@ -135,6 +135,7 @@
     <ClInclude Include="Envio.h" />
     <ClInclude Include="fechas.h" />
     <ClInclude Include="GestorDeArchivos.h" />
+    <ClInclude Include="gotoxy.h" />
     <ClInclude Include="GridView.h" />
     <ClInclude Include="HashUtils.h" />
     <ClInclude Include="AuthUI.h" />
