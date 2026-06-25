@@ -100,6 +100,11 @@ class ClienteUI {
                         cout << auxCategoria << endl;
                         aumentFila++;
                     }
+                    posicion(4 + aumentFila);
+                    cout << "Categoria: " << categoria << endl;
+
+
+                   
                     };
                 gridProductos->mostrarGrid(dibujado);
                 system("pause");

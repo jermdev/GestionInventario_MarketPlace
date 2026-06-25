@@ -136,6 +136,8 @@
     <ClInclude Include="fechas.h" />
     <ClInclude Include="GestorDeArchivos.h" />
     <ClInclude Include="GridView.h" />
+    <ClInclude Include="HashEntidad.hpp" />
+    <ClInclude Include="HashTabla.hpp" />
     <ClInclude Include="HashUtils.h" />
     <ClInclude Include="AuthUI.h" />
     <ClInclude Include="Carrito.h" />

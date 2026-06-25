@@ -9,6 +9,7 @@
 class VendedorService {
 private:
 	ProductoService* productoService;
+
 public:
 	VendedorService() {
 		this->productoService = new ProductoService();
@@ -27,6 +28,7 @@ public:
 		int id = idAleatorioPorDigitos(6);
 		Producto* nuevoProducto = new Producto(nombre, categoria, precio, id, idVendedor, stock);
 		productoService->agregarProducto(nuevoProducto, idVendedor);
+
 	}
 	void mostrarProductosPorVendedor(int idVendedor) {
 		Lista<Producto*>* productos = productoService->obtenerPorductosPorCondicion(0, [idVendedor](Producto* p) { return p->getIdVendedor() == idVendedor; });

@@ -1,6 +1,20 @@
-4;A23 samsung;celular;800.000000;109994;3
-4;Poco X7 pro;celular;1500.000000;112868;5
-4;IPHONE 17;celular;2800.000000;121958;2
-3;Pesa 20Kg;mancuerna;40.000000;114111;25
-3;Cuerda para saltar;cuerda;15.000000;107461;8
-11;Carrito de supermercado;super;140.000000;124525;5
+4;Galaxy S25;celular;3200.000000;130001;4
+4;Redmi Note 14;celular;1200.000000;130002;7
+4;Motorola Edge 60;celular;2100.000000;130003;3
+4;Honor X9c;celular;1450.000000;130004;6
+4;Realme GT 7;celular;2500.000000;130005;2
+3;Mancuerna 10Kg;mancuerna;25.000000;130006;15
+3;Mancuerna 15Kg;mancuerna;35.000000;130007;10
+3;Barra Olímpica;gimnasio;180.000000;130008;4
+3;Disco 5Kg;gimnasio;20.000000;130009;30
+3;Banco de Pesas;gimnasio;350.000000;130010;2
+11;Canasta de supermercado;super;90.000000;130011;8
+11;Estante Metálico;super;250.000000;130012;3
+11;Caja Registradora;super;850.000000;130013;2
+11;Lector de Código;super;120.000000;130014;6
+11;Refrigeradora Comercial;super;2800.000000;130015;1
+5;Laptop Lenovo IdeaPad;laptop;2400.000000;130016;5
+5;Laptop HP Pavilion;laptop;3100.000000;130017;4
+5;Laptop ASUS VivoBook;laptop;2800.000000;130018;3
+5;Monitor Samsung 24;monitor;650.000000;130019;7
+5;Teclado Mecánico RGB;periferico;180.000000;130020;12
