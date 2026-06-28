@@ -38,6 +38,37 @@ public:
 		system("pause");
 	}
 
+	void eliminarProductoGlobal(int id) {
+		productoService->eliminarProducto(id);
+	}
+
+	void editarProductoGlobal(int id, string nNombre, string nCat, double nPrecio, int nStock) {
+		Producto* p = productoService->buscarProductoPorId(0, [id](Producto* prod) { return prod->getId() == id; });
+
+		if (p != nullptr) {
+			p->setNombre(nNombre);
+			p->setCategoria(nCat);
+			p->setPrecio(nPrecio);
+			p->setStock(nStock);
+			productoService->guardarProductos(); // guarda los cambios en el txt
+			cout << u8"\nProducto modificado con éxito.\n";
+		}
+		else {
+			cout << u8"\nError: Producto no encontrado.\n";
+		}
+	}
+
+	void agregarProductoGlobal(string nombre, string cat, double precio, int stock) {
+		int nuevoId = rand() % 9000 + 1000;
+		Producto* p = new Producto(nombre, cat, precio, nuevoId, 0, stock);
+		productoService->agregarProducto(p, 0);
+		cout << u8"\nProducto publicado con éxito. ID asignado: " << nuevoId << "\n";
+	}
+
+	// Función auxiliar para editar usuarios
+	Usuario* obtenerUsuarioParaEditar(string correo) {
+		return usuarioService->buscarPorCorreo(correo);
+	}
 
 	void MostrarUsuarioPorCorreo(string correo) {
 		Usuario* u = usuarioService->buscarPorCorreo(correo);
@@ -81,5 +112,26 @@ public:
 			}
 
 		}
+	}
+
+	void eliminarProductoGlobal(int idProducto) {
+		productoService->eliminarProducto(idProducto);
+		cout << "\nProducto eliminado del sistema.\n";
+	}
+
+	void editarProductoGlobal(int id, string nNombre, string nCat, double nPrecio) {
+		Lista<Producto*>* productos = productoService->obtenerPorductosPorCondicion(0, [](Producto* p) { return true; });
+		for (int i = 0; i < productos->longitud(); i++) {
+			Producto* p = productos->obtenerPos(i);
+			if (p->getId() == id) {
+				p->setNombre(nNombre);
+				p->setCategoria(nCat);
+				p->setPrecio(nPrecio);
+				productoService->guardarProductos();
+				cout << "\nProducto actualizado con exito.\n";
+				return;
+			}
+		}
+		cout << "\nNo se encontro el producto.\n";
 	}
 };
