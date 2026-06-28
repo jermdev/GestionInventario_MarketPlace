@@ -3,37 +3,46 @@
 #include "Vendedor.h"
 #include "VendedorService.h"
 #include "Cola.h"
+#include "gotoxy.h"
+#include "MouseMenu.h"
 using namespace std;
 
 class VendedorUI {
 
     static void menuMisProductos(VendedorService* uService, Vendedor* ven) {
-        system("cls");
-        int opcion, id = 0;
+        string opciones[] = {
+            "[ Ver todos mis productos ]",
+            "[   Eliminar producto     ]",
+            "[    Ver productos        ]",
+            "[        Volver           ]"
+        };
+        const int total = 4;
 
-        do {
-            cout << "\n====== MIS PRODUCTOS ======\n";
-            cout << "1. Ver todos mis productos\n";
-            cout << "2. Eliminar producto\n";
-            cout << "3. Ver productos\n";
-            cout << "0. Volver\n";
-            cout << "Seleccione una opcion: ";
-            cin >> opcion;
+        while (true) {
+            system("cls");
+            cout << "\033[?25l";
 
-            switch (opcion) {
+            gotoXY(60 - 13, 8);
+            cout << "====== MIS PRODUCTOS ======";
 
-            case 1:
+            int sel = menuConMouse(opciones, total, 60, 11);
+            cout << "\033[?25h";
+
+            switch (sel) {
+            case 0:
                 uService->mostrarProductosPorVendedor(ven->getId());
+
                 break;
 
-
-            case 2:
+            case 1: {
+                int id = 0;
                 cout << "Ingrese el ID del producto a eliminar: " << endl;
                 cin >> id;
                 uService->eliminarProductosPorVendedor(ven->getId(), id);
                 break;
+            }
 
-            case 3: {
+            case 2: {
                 Lista<Producto*>* misProductos = uService->obtenerListaProductosVendedor(ven->getId());
 
                 if (misProductos->esVacia()) {
@@ -57,90 +66,97 @@ class VendedorUI {
                         cin.get();
                     }
                     else {
-                        cout << "\n�Has llegado al final de la cola!\n";
+                        cout << "\n¡Has llegado al final de la cola!\n";
+                        system("pause>0");
                     }
+
                 }
                 break;
             }
 
-            case 0:
-                system("cls");
-
-                break;
-
-            default:
-                cout << "Opcion no valida.\n";
+            case 3:
+                return;
             }
-
-        } while (opcion != 0);
+        }
     }
-    
-    static void menuAgregarProducto(VendedorService* uService, Vendedor *ven) {
+
+    static void menuAgregarProducto(VendedorService* uService, Vendedor* ven) {
         system("cls");
+        cout << "\033[?25h"; // mostrar cursor para escribir
+
+        const int izqX  = 45;
+        const int inputX = 59;
+
+        gotoXY(60 - 14, 4);
+        cout << "====== AGREGAR PRODUCTO ======";
+
+        gotoXY(izqX, 8);  cout << "Nombre      : ";
+        gotoXY(izqX, 10); cout << "Categoria   : ";
+        gotoXY(izqX, 12); cout << "Precio      : ";
+        gotoXY(izqX, 14); cout << "Stock       : ";
+
+        gotoXY(60 - 10, 19);
+        cout << "[ ESC para cancelar ]";
+
         string nombre, categoria;
-        double precio;
-        int stock;
+        double precio = 0;
+        int stock = 0;
 
-        cout << "\n====== AGREGAR PRODUCTO ======\n";
+        gotoXY(inputX, 8);
+        if (!leerCampo(nombre)) return;
 
-        cin.ignore();
+        gotoXY(inputX, 10);
+        if (!leerCampo(categoria)) return;
 
-        cout << "Nombre del producto: ";
-        getline(cin, nombre);
+        gotoXY(inputX, 12);
+        if (!leerDecimal(precio)) return;
 
-        cout << "Categoria: ";
-        getline(cin, categoria);
-
-        cout << "Precio: ";
-        cin >> precio;
-
-        cout << "Stock: ";
-        cin >> stock;
+        gotoXY(inputX, 14);
+        if (!leerEntero(stock)) return;
 
         uService->agregarProducto(ven->getId(), nombre, categoria, precio, stock);
 
         system("cls");
-        cout << "Producto agregado exitosamente." << endl;
-
+        gotoXY(60 - 17, 14);
+        cout << "Producto agregado exitosamente.";
+        system("pause");
     }
- 
-
 
 public:
     static void Render(Vendedor* ven) {
         VendedorService* uService = new VendedorService();
         uService->inicializarListaProductos();
-        int opcion;
-        do {
-            cout << "\n====== MENU VENDEDOR ======\n";
-            cout << "1. Ver mis productos\n";
-            cout << "2. Agregar producto\n";
-            cout << "0. Cerrar Sesion\n";
-            cout << "Seleccione una opcion: ";
-            cin >> opcion;
-            switch (opcion) {
 
-            case 1:
-                
+        string opciones[] = {
+            "[ Ver mis productos ]",
+            "[ Agregar producto  ]",
+            "[ Cerrar Sesion     ]"
+        };
+        const int totalOpciones = 3;
+
+        while (true) {
+            system("cls");
+            cout << "\033[?25l";
+
+            gotoXY(60 - 14, 10);
+            cout << "====== MENU VENDEDOR ======";
+
+            int sel = menuConMouse(opciones, totalOpciones, 60, 13);
+            cout << "\033[?25h";
+
+            switch (sel) {
+            case 0:
                 menuMisProductos(uService, ven);
                 break;
 
-            case 2:
-                
+            case 1:
                 menuAgregarProducto(uService, ven);
                 break;
 
-        
-            case 0:
-                
+            case 2:
                 cout << "Cerrando sesion...\n";
-                break;
-
-            default:
-                cout << "Opcion no valida.\n";
-                break;
+                return;
             }
-
-        } while (opcion != 0);
+        }
     }
 };

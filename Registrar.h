@@ -1,71 +1,82 @@
 #pragma once
 #include <iostream>
 #include <string>
-#include <limits>
 #include "Auth.h"
+#include "gotoxy.h"
+#include "MouseMenu.h"
 using namespace std;
 
 class Registrar {
 public:
     static void Render(Auth* auth) {
-        cout << "\n====== REGISTRO ======\n";
-        cout << "Tipo de cuenta:\n";
-        cout << "  1. Cliente\n";
-        cout << "  2. Vendedor\n";
-        cout << "  3. Administrador\n";
-        cout << "  0. Cancelar\n";
-        cout << "Seleccione: ";
+        system("cls");
+        cout << "\033[?25l"; // ocultar cursor mientras se muestra el menu
 
-        int tipo;
-        cin >> tipo;
+        gotoXY(60 - 10, 7);
+        cout << "====== REGISTRO ======";
 
-        if (tipo == 0) return;
-        if (tipo != 1 && tipo != 2 && tipo!=3) {
-            cout << "Opcion no valida.\n";
-            return;
-        }
+        gotoXY(60 - 9, 9);
+        cout << "Tipo de cuenta:";
 
-        // Limpiar el '\n' que quedo en el buffer despues de cin >> tipo
-        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        string tiposOpciones[] = {
+            "[ Cliente        ]",
+            "[ Vendedor       ]",
+            "[ Administrador  ]",
+            "[ Cancelar       ]"
+        };
+        const int totalTipos = 4;
 
-        string nombre, correo, direccion, contrasenia,cargo;
-		char ch;
+        int sel = menuConMouse(tiposOpciones, totalTipos, 60, 11);
 
-        cout << "Nombre completo: ";
-        getline(cin, nombre);
+        if (sel == 3) return;
 
-        cout << "Correo electronico: ";
-        cin >> correo;
+        int tipo = sel + 1; // 0=Cliente(1), 1=Vendedor(2), 2=Administrador(3)
 
-        cout << "Direccion: ";
-        cin.ignore(numeric_limits<streamsize>::max(), '\n');
-        getline(cin, direccion);
+        // --- formulario de datos ---
+        system("cls");
+        cout << "\033[?25h"; // mostrar cursor para escribir
 
-        cout << "Contrasenia: ";
-        while (true) {
-            ch = _getch();
+        string tipoNombre = (tipo == 1) ? "Cliente" : (tipo == 2) ? "Vendedor" : "Administrador";
 
-            if (ch == '\r') {
-                break;
-            }
-            else if (ch == '\b') {
-                if (contrasenia.length() > 0) {
-                    contrasenia.pop_back();
-                    cout << "\b \b";
-                }
-            }
-            else {
-                contrasenia += ch;
-                cout << "*";
-            }
-        }
+        gotoXY(60 - 10, 3);
+        cout << "====== REGISTRO ======";
+
+        gotoXY(60 - 8, 5);
+        cout << "Cuenta: " << tipoNombre;
+
+        const int izqX   = 45;
+        const int inputX  = 59;
+
+        gotoXY(izqX, 8);  cout << "Nombre      : ";
+        gotoXY(izqX, 10); cout << "Correo      : ";
+        gotoXY(izqX, 12); cout << "Direccion   : ";
+        gotoXY(izqX, 14); cout << "Contrasenia : ";
         if (tipo == 3) {
-            cout << "\nCargo: ";
-            cin.ignore(numeric_limits<streamsize>::max(), '\n');
-            getline(cin, cargo);
+            gotoXY(izqX, 16); cout << "Cargo       : ";
         }
 
-        cout << "\n";
+        gotoXY(60 - 10, 21);
+        cout << "[ ESC para cancelar ]";
+
+        string nombre, correo, direccion, contrasenia, cargo;
+
+        gotoXY(inputX, 8);
+        if (!leerCampo(nombre)) return;
+
+        gotoXY(inputX, 10);
+        if (!leerCampo(correo)) return;
+
+        gotoXY(inputX, 12);
+        if (!leerCampo(direccion)) return;
+
+        gotoXY(inputX, 14);
+        if (!leerCampo(contrasenia, true)) return;
+
+        if (tipo == 3) {
+            gotoXY(inputX, 16);
+            if (!leerCampo(cargo)) return;
+        }
+
         Auth::ResultadoRegistro resultado;
         if (tipo == 1)
             resultado = auth->registrarCliente(nombre, correo, direccion, contrasenia);
@@ -74,17 +85,22 @@ public:
         else
             resultado = auth->registrarAdministrador(nombre, correo, direccion, contrasenia, cargo);
 
+        system("cls");
+        string msg;
         switch (resultado) {
         case Auth::REGISTRO_EXITOSO:
-            cout << "Registro exitoso. Ya puede iniciar sesion.\n";
+            msg = "Registro exitoso. Ya puede iniciar sesion.";
             break;
         case Auth::CORREO_DUPLICADO:
-            cout << "El correo ya esta registrado. Use otro correo.\n";
+            msg = "El correo ya esta registrado. Use otro correo.";
             break;
         case Auth::REGISTRO_ERROR:
         default:
-            cout << "Error al registrar. Intente de nuevo.\n";
+            msg = "Error al registrar. Intente de nuevo.";
             break;
         }
+        gotoXY(60 - (int)msg.length() / 2, 14);
+        cout << msg << "\n\n";
+        system("pause");
     }
 };

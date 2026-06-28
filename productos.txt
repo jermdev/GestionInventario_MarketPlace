@@ -4,3 +4,4 @@
 3;Pesa 20Kg;mancuerna;40.000000;114111;25
 3;Cuerda para saltar;cuerda;15.000000;107461;8
 11;Carrito de supermercado;super;140.000000;124525;5
+11;Peine;limpiesa;17.000000;130482;60

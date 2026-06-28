@@ -43,6 +43,7 @@ public:
 				pilaProductos.pop()->MostrarProducto();
 			}
 		}
+		system("pause>0");
 	}
 	void eliminarProductosPorVendedor(int idVendedor, int idProducto) {
 		// Buscamos directamente el producto validando que exista y le pertenezca a este vendedor
@@ -59,6 +60,7 @@ public:
 			// Si no lo encuentra, o si el producto es de otro vendedor
 			cout << "Error: No se encontro el producto o no te pertenece." << endl;
 		}
+		system("pause>0");
 	}
 	Lista<Producto*>* obtenerListaProductosVendedor(int idVendedor) {
 		return productoService->obtenerPorductosPorCondicion(0, [idVendedor](Producto* p) {

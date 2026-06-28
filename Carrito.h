@@ -39,6 +39,7 @@ public:
 		int nProductos = productos->longitud();
 		if (nProductos == 0) {
 			cout << "El carrito esta vacio.\n";
+			system("pause > nul");
 			return;
 		}
 
@@ -56,6 +57,7 @@ public:
 			cout << "\n[Agregado Recientemente] Cantidad: " << aux->cantidad << "\n";
 			aux->producto->MostrarProducto();
 		}
+		system("pause > nul");
 	} 
 
 	void agregarProducto(Producto* producto, int cantidadSolicitada) {

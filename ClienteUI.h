@@ -4,27 +4,33 @@
 #include "ComponenteUI.h"
 #include "GridView.h"
 #include "Producto.h"
+#include "gotoxy.h"
+#include "MouseMenu.h"
 using namespace std;
 
 class ClienteUI {
 
-
     static void menuVerProductos(ClienteService* uService) {
-        int opcion;
-        system("cls");
-        do {
+        string opciones[] = {
+            "[ Mostrar todos los productos ]",
+            "[    Filtrar por categoria    ]",
+            "[     Ordenar por precio      ]",
+            "[           Volver            ]"
+        };
+        const int total = 4;
+
+        while (true) {
             system("cls");
+            cout << "\033[?25l";
 
-            cout << "\n====== VER PRODUCTOS ======\n";
-            cout << "1. Mostrar todos los productos\n";
-            cout << "2. Filtrar por categoria\n";
-            cout << "3. Ordenar por precio\n";
-            cout << "0. Volver\n";
-            cout << "Seleccione una opcion: ";
-            cin >> opcion;
+            gotoXY(60 - 13, 8);
+            cout << "====== VER PRODUCTOS ======";
 
-            switch (opcion) {
-            case 1:
+            int sel = menuConMouse(opciones, total, 60, 11);
+            cout << "\033[?25h";
+
+            switch (sel) {
+            case 0:
             {
                 system("cls");
 
@@ -38,24 +44,15 @@ class ClienteUI {
                 }
 
                 CONSOLE_SCREEN_BUFFER_INFO csbi;
+                GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi);
 
-                GetConsoleScreenBufferInfo(
-                    GetStdHandle(STD_OUTPUT_HANDLE),
-                    &csbi
-                );
-
-                int ancho =
-                    csbi.srWindow.Right -
-                    csbi.srWindow.Left + 1;
-
-                int alto =
-                    csbi.srWindow.Bottom -
-                    csbi.srWindow.Top + 1;
+                int ancho = csbi.srWindow.Right - csbi.srWindow.Left + 1;
+                int alto  = csbi.srWindow.Bottom - csbi.srWindow.Top + 1;
 
                 int x = (ancho / 15);
                 int y = (alto / 7);
 
-                GridView<Producto*> *gridProductos = new GridView<Producto*>(cardProductos,x,y, ancho, alto, 21, 6);
+                GridView<Producto*>* gridProductos = new GridView<Producto*>(cardProductos, x, y, ancho, alto, 21, 6);
                 auto dibujado = [](Producto* p, auto posicion) {
 
                     int aumentFila = 0;
@@ -69,8 +66,8 @@ class ClienteUI {
                     string auxNombre = "";
 
                     if (nombre.length() > 11) {
-                        auxNombre = nombre.substr(11);   // resto
-                        nombre = nombre.substr(0, 11);   // primera parte
+                        auxNombre = nombre.substr(11);
+                        nombre = nombre.substr(0, 11);
                     }
 
                     cout << "Nombre: " << nombre << endl;
@@ -100,56 +97,70 @@ class ClienteUI {
                         cout << auxCategoria << endl;
                         aumentFila++;
                     }
+                    int id = p->getId();
+                    posicion(4 + aumentFila);
+                    cout << "ID: " << id << endl;
                     };
                 gridProductos->mostrarGrid(dibujado);
                 system("pause");
                 break;
             }
 
-            case 2: {
+            case 1: {
+                system("cls");
                 string categoria;
-                cout << "Dijite la categoria que quiere buscar: "; cin >> categoria;
+                string descripcionCampo = "Dijite la categoria que quiere buscar: ";
+                gotoXY(descripcionCampo.length() - 20, 8);
+                cout << descripcionCampo; cin >> categoria;
                 uService->filtrarPorCategoria(categoria);
                 break;
             }
 
-            case 3: {
-                    string tipoOrden;
-                do
-                {
-                    cout << "Ordenar por mayor o menor precio (ejemplo mayor / menor): "; cin >> tipoOrden;
+            case 2: {
+                string tipoOrden;
+                string descripcionCampo = "Ordenar por mayor o menor precio (ejemplo mayor / menor): ";
+                system("cls");
+                gotoXY(descripcionCampo.length() - 50, 8);
 
-                } while (tipoOrden!= "mayor" && tipoOrden != "menor");
-                
+                do {
+                    cout << descripcionCampo; cin >> tipoOrden;
+                } while (tipoOrden != "mayor" && tipoOrden != "menor");
+                system("cls");
                 uService->mostrarListaProductosOrdenadaPorPrecio(tipoOrden);
                 break;
             }
-            case 0:
-                system("cls");
-                break;
 
-            default:
-                cout << "Opcion no valida.\n";
+            case 3:
+                return;
             }
-
-        } while (opcion != 0);
+        }
     }
 
-    static void menuBuscarProducto(Cliente* cli,ClienteService* uService) {
-        int opcion;
-        system("cls");
-        do {
-            cout << "\n====== BUSCAR PRODUCTO ======\n";
-            cout << "1. Buscar por ID:\n";
-            cout << "0. Volver\n";
-            cout << "Seleccione una opcion: ";
-            cin >> opcion;
+    static void menuBuscarProducto(Cliente* cli, ClienteService* uService) {
+        string opciones[] = {
+            "[ Buscar por ID ]",
+            "[    Volver     ]"
+        };
+        const int total = 2;
 
-            switch (opcion) {
-            case 1: 
-            {   
+        while (true) {
+            system("cls");
+            cout << "\033[?25l";
+
+            gotoXY(60 - 14, 10);
+            cout << "====== BUSCAR PRODUCTO ======";
+
+            int sel = menuConMouse(opciones, total, 60, 13);
+            cout << "\033[?25h";
+
+            switch (sel) {
+            case 0:
+            {
                 int id;
-                cout << "Dijite el id del Producto."; cin >> id;
+                string descripcionCampo = "Dijite el id del Producto: ";
+                system("cls");
+                gotoXY(descripcionCampo.length() - 20, 8);
+                cout << descripcionCampo; cin >> id;
 
                 Producto* p = uService->buscarProductoPorID(id);
                 if (p == nullptr) {
@@ -157,13 +168,10 @@ class ClienteUI {
                     system("pause");
                     break;
                 }
+
                 string resProducto;
                 p->MostrarProducto();
                 cout << "Desea comprar este producto? (y/n) :"; cin >> resProducto;
-
-                if (resProducto == "n") {
-                    break;
-                }
 
                 if (resProducto == "y") {
                     int cantidad;
@@ -173,43 +181,48 @@ class ClienteUI {
                         system("pause");
                         break;
                     }
-                        cli->getCarrito()->agregarProducto(p, cantidad);
+                    cli->getCarrito()->agregarProducto(p, cantidad);
+                    cout << "Producto agregado al carrito.";
                 }
-
                 break;
             }
-            
-            case 0:
-                system("cls");
 
-                break;
-
-            default:
-                cout << "Opcion no valida.\n";
-
+            case 1:
+                return;
             }
-
-        } while (opcion != 0);
+        }
     }
 
     static void menuCarrito(Cliente* cli, ClienteService* uService) {
-        system("cls");
-        int opcion, id, cant;
-        do {
-            cout << "\n====== CARRITO ======\n";
-            cout << "1. Ver productos del carrito\n";
-            cout << "2. Agregar producto\n";
-            cout << "3. Eliminar producto\n";
-            cout << "4. Vaciar carrito\n";
-            cout << "0. Volver\n";
-            cout << "Seleccione una opcion: ";
-            cin >> opcion;
+        string opciones[] = {
+            "[ Ver productos del carrito ]",
+            "[     Agregar producto      ]",
+            "[    Eliminar producto      ]",
+            "[      Vaciar carrito       ]",
+            "[          Volver           ]"
+        };
+        const int total = 5;
 
-            switch (opcion) {
-            case 1:
+        while (true) {
+            system("cls");
+            cout << "\033[?25l";
+
+            gotoXY(60 - 10, 9);
+            cout << "====== CARRITO ======";
+
+            int sel = menuConMouse(opciones, total, 60, 12);
+            cout << "\033[?25h";
+
+            int id, cant;
+
+            switch (sel) {
+            case 0:
+                system("cls");
+                gotoXY(60, 10);
                 cli->getCarrito()->listarCarrito();
                 break;
-            case 2:
+
+            case 1:
                 cout << "Ingrese el ID del producto a agregar: ";
                 cin >> id;
                 {
@@ -225,7 +238,8 @@ class ClienteUI {
                     }
                 }
                 break;
-            case 3:
+
+            case 2:
                 if (cli->getCarrito()->getProductos()->esVacia()) {
                     cout << "Tu carrito esta vacio. No puedes eliminar.\n";
                     break;
@@ -236,32 +250,40 @@ class ClienteUI {
                 cin >> cant;
                 cli->getCarrito()->borrarProducto(id, cant);
                 break;
-            case 4:
+
+            case 3:
                 cli->getCarrito()->vaciarCarrito();
                 cout << "Vaciando carrito...\n";
                 break;
-            case 0:
-                system("cls");
-                break;
-            default:
-                cout << "Opcion no valida.\n";
+
+            case 4:
+                return;
             }
-        } while (opcion != 0);
+        }
     }
 
     static void menuCompra(Cliente* cli, ClienteService* uService) {
-        system("cls");
-        int opcion, mPago, tComp; char tar; string numTar,cvv;
-        do {
-            cout << "\n====== REALIZAR COMPRA ======\n";
-            cout << "1. Confirmar compra\n";
-            cout << "2. Ver resumen de compra (Carrito)\n";
-            cout << "0. Volver\n";
-            cout << "Seleccione una opcion: ";
-            cin >> opcion;
+        string opciones[] = {
+            "[    Confirmar compra     ]",
+            "[ Ver resumen (Carrito)   ]",
+            "[         Volver          ]"
+        };
+        const int total = 3;
 
-            switch (opcion) {
-            case 1:
+        while (true) {
+            system("cls");
+            cout << "\033[?25l";
+
+            gotoXY(60 - 14, 10);
+            cout << "====== REALIZAR COMPRA ======";
+
+            int sel = menuConMouse(opciones, total, 60, 13);
+            cout << "\033[?25h";
+
+            int mPago, tComp; char tar; string numTar, cvv;
+
+            switch (sel) {
+            case 0:
                 if (cli->getCarrito()->getProductos()->esVacia()) {
                     cout << "Tu carrito esta vacio. No puedes comprar.\n";
                     break;
@@ -275,7 +297,6 @@ class ClienteUI {
                 cout << "Ingrese su CVV: ";
                 while (true) {
                     tar = _getch();
-
                     if (tar == '\r') {
                         break;
                     }
@@ -290,98 +311,99 @@ class ClienteUI {
                         cout << "*";
                     }
                 }
-                //FALTA IMPLEMENTAR QUE APAREZCA LA TARJETA
-                uService->realizarCompraProductos(cli->getId(),cli,static_cast<MetodoPago>(mPago),static_cast<TipoComprobante>(tComp) );
+                uService->realizarCompraProductos(cli->getId(), cli, static_cast<MetodoPago>(mPago), static_cast<TipoComprobante>(tComp));
                 break;
-            case 2:
+
+            case 1:
                 cli->getCarrito()->listarCarrito();
                 break;
-            case 0:
-                system("cls");
-                break;
-            default:
-                cout << "Opcion no valida.\n";
+
+            case 2:
+                return;
             }
-        } while (opcion != 0);
+        }
     }
 
     static void menuHistorialPedidos(Cliente* cli, ClienteService* uService) {
-        int opcion;
-        system("cls");
-        do {
-            cout << "\n====== HISTORIAL DE PEDIDOS ======\n";
-            cout << "1. Ver todos los pedidos\n";
-            cout << "0. Volver\n";
-            cout << "Seleccione una opcion: ";
-            cin >> opcion;
+        string opciones[] = {
+            "[ Ver todos los pedidos ]",
+            "[        Volver         ]"
+        };
+        const int total = 2;
 
-            switch (opcion) {
-            case 1:
-                uService->listarPedidos(cli->getId());
-                break;
+        while (true) {
+            system("cls");
+            cout << "\033[?25l";
 
+            gotoXY(60 - 16, 10);
+            cout << "====== HISTORIAL DE PEDIDOS ======";
+
+            int sel = menuConMouse(opciones, total, 60, 13);
+            cout << "\033[?25h";
+
+            switch (sel) {
             case 0:
-                system("cls");
+                uService->listarPedidos(cli->getId());
+                system("pause>0");
                 break;
 
-            default:
-                cout << "Opcion no valida.\n";
+            case 1:
+                return;
             }
-
-        } while (opcion != 0);
+        }
     }
-    public:
+
+public:
     static void Render(Cliente* cli) {
         ClienteService* uService = new ClienteService();
         uService->inicializarListaProductos();
         uService->InicializarPedidosPorIdCliente(cli->getId());
-        int opcion;
-        do {
-            cout << "\n====== MENU CLIENTE ======\n";
-            cout << "1. Ver Productos\n";
-            cout << "2. Buscar Producto\n";
-            cout << "3. Ver Carrito\n";
-            cout << "4. Realizar Compra\n";
-            cout << "5. Ver Historial de Pedidos\n";
-            cout << "0. Cerrar Sesion\n";
-            cout << "Seleccione una opcion: ";
-            cin >> opcion;
-            
-            switch (opcion) {
 
-            case 1:
+        string opciones[] = {
+            "[    Ver Productos         ]",
+            "[    Buscar Producto       ]",
+            "[    Ver Carrito           ]",
+            "[    Realizar Compra       ]",
+            "[ Ver Historial de Pedidos ]",
+            "[    Cerrar Sesion         ]"
+        };
+        const int totalOpciones = 6;
+
+        while (true) {
+            system("cls");
+            cout << "\033[?25l";
+
+            gotoXY(60 - 13, 8);
+            cout << "====== Hola, " << cli->getNombre() <<  " ======";
+
+            int sel = menuConMouse(opciones, totalOpciones, 60, 11);
+            cout << "\033[?25h";
+
+            switch (sel) {
+            case 0:
                 menuVerProductos(uService);
                 break;
 
-            case 2:
-                
-                menuBuscarProducto(cli,uService);
+            case 1:
+                menuBuscarProducto(cli, uService);
                 break;
 
-            case 3:
-                
+            case 2:
                 menuCarrito(cli, uService);
                 break;
 
-            case 4:
-                
-                menuCompra(cli,uService);
+            case 3:
+                menuCompra(cli, uService);
                 break;
 
-            case 5:
-                
+            case 4:
                 menuHistorialPedidos(cli, uService);
                 break;
 
-            case 0:
+            case 5:
                 cout << "Cerrando sesion...\n";
-                break;
-
-            default:
-                cout << "Opcion no valida.\n";
-                break;
+                return;
             }
-
-        } while (opcion != 0);
+        }
     }
 };
