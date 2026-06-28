@@ -56,6 +56,7 @@ public:
 			NProductos* aux = pilaCarrito.pop();
 			cout << "\n[Agregado Recientemente] Cantidad: " << aux->cantidad << "\n";
 			aux->producto->MostrarProducto();
+
 		}
 		system("pause > nul");
 	} 
@@ -63,6 +64,7 @@ public:
 	void agregarProducto(Producto* producto, int cantidadSolicitada) {
 		if (producto->getStock() < cantidadSolicitada) {
 			cout << "Stock insuficiente para solicitar " << cantidadSolicitada << " " << producto->getNombre() << endl;
+			
 			return;
 		}
 
@@ -71,6 +73,8 @@ public:
 
 		productos->agregaInicial(solicitudPodructo);
 		numeroProductos += cantidadSolicitada;
+		cout << "Producto agregado correctamten.";
+		
 	}
 
 	void borrarProducto(int id, int cantidad) {
@@ -107,6 +111,7 @@ public:
 		}
 
 		numeroProductos -= cantidad;
+		
 	}
 
 };

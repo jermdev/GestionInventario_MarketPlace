@@ -30,11 +30,13 @@ class VendedorUI {
 
             switch (sel) {
             case 0:
+                system("cls");
                 uService->mostrarProductosPorVendedor(ven->getId());
 
                 break;
 
             case 1: {
+                system("cls");
                 int id = 0;
                 cout << "Ingrese el ID del producto a eliminar: " << endl;
                 cin >> id;
@@ -43,6 +45,7 @@ class VendedorUI {
             }
 
             case 2: {
+                system("cls");
                 Lista<Producto*>* misProductos = uService->obtenerListaProductosVendedor(ven->getId());
 
                 if (misProductos->esVacia()) {

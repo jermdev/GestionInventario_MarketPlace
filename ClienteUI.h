@@ -223,6 +223,7 @@ class ClienteUI {
                 break;
 
             case 1:
+                system("cls");
                 cout << "Ingrese el ID del producto a agregar: ";
                 cin >> id;
                 {
@@ -231,15 +232,17 @@ class ClienteUI {
                         cout << "Ingrese la cantidad: ";
                         cin >> cant;
                         cli->getCarrito()->agregarProducto(p, cant);
-                        cout << "Producto agregado al carrito con exito.\n";
+                        
                     }
                     else {
                         cout << "Producto no encontrado en el inventario.\n";
                     }
+                    system("pause > nul");
                 }
                 break;
 
             case 2:
+                system("cls");
                 if (cli->getCarrito()->getProductos()->esVacia()) {
                     cout << "Tu carrito esta vacio. No puedes eliminar.\n";
                     break;
@@ -249,11 +252,14 @@ class ClienteUI {
                 cout << "Ingrese la cantidad a eliminar: ";
                 cin >> cant;
                 cli->getCarrito()->borrarProducto(id, cant);
+                system("pause > nul");
                 break;
 
             case 3:
+                system("cls");
                 cli->getCarrito()->vaciarCarrito();
                 cout << "Vaciando carrito...\n";
+                system("pause > nul");
                 break;
 
             case 4:
@@ -284,6 +290,8 @@ class ClienteUI {
 
             switch (sel) {
             case 0:
+                system("cls");
+                gotoXY(12,8);
                 if (cli->getCarrito()->getProductos()->esVacia()) {
                     cout << "Tu carrito esta vacio. No puedes comprar.\n";
                     break;
@@ -312,6 +320,8 @@ class ClienteUI {
                     }
                 }
                 uService->realizarCompraProductos(cli->getId(), cli, static_cast<MetodoPago>(mPago), static_cast<TipoComprobante>(tComp));
+                cout << "Producto comprado correctamente. Revisar Pedidos.";
+                system("pause > 0");
                 break;
 
             case 1:
@@ -343,6 +353,7 @@ class ClienteUI {
 
             switch (sel) {
             case 0:
+                system("cls");
                 uService->listarPedidos(cli->getId());
                 system("pause>0");
                 break;

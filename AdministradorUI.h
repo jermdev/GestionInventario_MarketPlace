@@ -73,6 +73,7 @@ public:
 
             switch (sel) {
             case 0:
+                system("cls");
                 uService->mostrarTodosLosProductos();
                 break;
             case 1:
@@ -80,6 +81,7 @@ public:
             case 2:
                 break;
             case 3:
+                system("cls");
                 uService->mostrarTodosLosUsuarios();
                 break;
             case 4:
