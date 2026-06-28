@@ -2,6 +2,8 @@
 #include "Lista.h"
 #include "Producto.h"
 #include "Pila.h"
+#include "HashTabla.hpp" 
+
 struct NProductos {
 	Producto* producto;
 	int cantidad;
@@ -10,27 +12,40 @@ struct NProductos {
 class Carrito {
 private:
 	int numeroProductos;
-	Lista<NProductos*>* productos;
 	double precioDelCarrito;
-public:
+	Lista<NProductos*>* productos;
+	HashTabla<int, NProductos*>* tablaCarrito;
 
+public:
 	Carrito() {
 		this->productos = new Lista<NProductos*>();
+		this->tablaCarrito = new HashTabla<int, NProductos*>(128); 
 		this->numeroProductos = 0;
 		this->precioDelCarrito = 0;
 	}
 
 	~Carrito() {
+		for (uint i = 0; i < productos->longitud(); i++) {
+			delete productos->obtenerPos(i);
+		}
 		delete productos;
+		delete tablaCarrito;
 	}
 
-
 	Lista<NProductos*>* getProductos() { return productos; }
+	double getPrecioTotal() { return precioDelCarrito; }
 
 	void vaciarCarrito() {
+		for (uint i = 0; i < productos->longitud(); i++) {
+			delete productos->obtenerPos(i);
+		}
 		while (!productos->esVacia()) {
 			productos->eliminaInicial();
 		}
+
+		delete tablaCarrito;
+		tablaCarrito = new HashTabla<int, NProductos*>(128);
+
 		numeroProductos = 0;
 		precioDelCarrito = 0;
 	}
@@ -45,6 +60,7 @@ public:
 
 		cout << "\n--- CARRITO DE COMPRAS ---\n";
 		cout << "Total de items distintos: " << nProductos << "\n";
+		cout << "Monto total acumulado: S/ " << precioDelCarrito << "\n";
 
 		Pila<NProductos*> pilaCarrito;
 
@@ -68,50 +84,59 @@ public:
 			return;
 		}
 
-		//producto->setStock(producto->getStock() - cantidadSolicitada);
-		NProductos* solicitudPodructo = new NProductos{ producto, cantidadSolicitada };
+		int id = producto->getId();
 
-		productos->agregaInicial(solicitudPodructo);
+		NProductos* existente = tablaCarrito->buscar(id);
+
+		if (existente != nullptr) {
+			if (producto->getStock() < (existente->cantidad + cantidadSolicitada)) {
+				cout << "Stock insuficiente para agregar mas unidades de " << producto->getNombre() << endl;
+				return;
+			}
+			existente->cantidad += cantidadSolicitada;
+		}
+		else {
+			NProductos* solicitudProducto = new NProductos{ producto, cantidadSolicitada };
+			productos->agregaInicial(solicitudProducto);
+			tablaCarrito->insertar(id, solicitudProducto);
+		}
+
 		numeroProductos += cantidadSolicitada;
-		cout << "Producto agregado correctamten.";
-		
+		precioDelCarrito += (producto->getPrecio() * cantidadSolicitada);
+		cout << "Producto agregado exitosamente." << endl;
 	}
 
 	void borrarProducto(int id, int cantidad) {
+		NProductos* item = tablaCarrito->buscar(id);
 
-
-		int nProductos = productos->longitud();
-		NProductos* aux = productos->obtenerInicial();
-		for (int i = 0; i < nProductos; i++) {
-
-			if (aux->producto->getId() == id) {
-
-				if (aux->cantidad == cantidad) {
-					productos->eliminaPos(i);
-					cout << "Producto eliminado Correctamente.";
-				}
-
-				if (aux->cantidad > cantidad) {
-					aux->cantidad -= cantidad;
-					cout << "Se eliminaron " << cantidad << " " << aux->producto->getNombre();
-				}
-				if(aux->cantidad<cantidad) {
-					cout << "La cantidad de productos a eliminar no valida.";
-				}
-
-				return;
-
-			}
-			else {
-				cout << "Elemento con el id: " << id << " no encontrado.";
-				return;
-			}
-			aux = productos->obtenerPos(i + 1);
-
+		if (item == nullptr) {
+			cout << "Elemento con el id: " << id << " no encontrado en el carrito." << endl;
+			return;
 		}
 
-		numeroProductos -= cantidad;
-		
-	}
+		if (cantidad >= item->cantidad) {
+			int cantidadEliminada = item->cantidad;
 
+			for (uint i = 0; i < productos->longitud(); i++) {
+				if (productos->obtenerPos(i)->producto->getId() == id) {
+					productos->eliminaPos(i);
+					break;
+				}
+			}
+
+			tablaCarrito->eliminarValor([id](NProductos* n) { return n->producto->getId() == id; });
+
+			numeroProductos -= cantidadEliminada;
+			precioDelCarrito -= (item->producto->getPrecio() * cantidadEliminada);
+			delete item;
+
+			cout << "Producto eliminado completamente del carrito." << endl;
+		}
+		else {
+			item->cantidad -= cantidad;
+			numeroProductos -= cantidad;
+			precioDelCarrito -= (item->producto->getPrecio() * cantidad);
+			cout << "Se redujeron " << cantidad << " unidades de " << item->producto->getNombre() << "." << endl;
+		}
+	}
 };

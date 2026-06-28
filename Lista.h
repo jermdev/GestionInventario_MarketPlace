@@ -1,85 +1,75 @@
 #pragma once
-#include "Nodo.h"
 #include <functional>
+
 typedef unsigned int uint;
 using namespace std;
 
-template <typename T, T NADA = 0>
+template <typename T>
 class Lista {
-    struct Nodo;
+private:
+    struct Nodo {
+        T elem;
+        Nodo* sig;
+        Nodo(T elem, Nodo* sig = nullptr) : elem(elem), sig(sig) {}
+    };
+
     typedef function<int(T, T)> Comp;
 
     Nodo* ini;
-    uint    lon; // n�mero de elementos en la lista
-
-    Comp    comparar; // lambda de criterio de comparaci�n
+    uint lon;
+    Comp comparar;
 
 public:
-    Lista() : ini(nullptr), lon(0), comparar([](T a, T b) {return a - b; }) {};
+    Lista() : ini(nullptr), lon(0) {};
     Lista(Comp comparar) : ini(nullptr), lon(0), comparar(comparar) {}
-    ~Lista();
 
-    uint    longitud();
-
-    bool    esVacia();
-
-    void    agregaInicial(T elem);
-    void    agregarPos(T elem, uint pos);
-    void    agregaFinal(T elem);
-
-    void    modificarInicial(T elem);
-    void    modificarPos(T elem, uint pos);
-    void    modificarFinal(T elem);
-
-    void    eliminaInicial();
-    void    eliminaPos(uint pos);
-    void    eliminaFinal();
-
-    T       obtenerInicial();
-    T       obtenerPos(uint pos);
-    T       obtenerFinal();
-
-    T       buscar(T elem);
-};
-
-template <typename T, T NADA>
-struct Lista<T, NADA>::Nodo {
-    T       elem;
-    Nodo* sig; // puntero apunta al siguiente nodo
-
-    Nodo(T elem = NADA, Nodo* sig = nullptr) : elem(elem), sig(sig) {}
-};
-
-template <typename T, T NADA>
-Lista<T, NADA>::~Lista() {
-    while (ini != nullptr) {
+    ~Lista() {
         Nodo* aux = ini;
-        ini = ini->sig;
-        delete aux;
+        while (aux != nullptr) {
+            ini = ini->sig;
+            delete aux;
+            aux = ini;
+        }
     }
-}
 
-template <typename T, T NADA>
-uint Lista<T, NADA>::longitud() {
+    uint longitud();
+    bool esVacia();
+    void agregaInicial(T elem);
+    void agregarPos(T elem, uint pos);
+    void agregaFinal(T elem);
+    void modificarInicial(T elem);
+    void modificarPos(T elem, uint pos);
+    void modificarFinal(T elem);
+    void eliminaInicial();
+    void eliminaPos(uint pos);
+    void eliminaFinal();
+    T obtenerInicial();
+    T obtenerPos(uint pos);
+    T obtenerFinal();
+    T buscar(T elem);
+};
+
+template <typename T>
+uint Lista<T>::longitud() {
     return lon;
 }
 
-template <typename T, T NADA>
-bool Lista<T, NADA>::esVacia() {
+template <typename T>
+bool Lista<T>::esVacia() {
     return lon == 0;
 }
 
-template <typename T, T NADA>
-void Lista<T, NADA>::agregaInicial(T elem) {
-    Nodo* nuevo = new Nodo(elem, ini); //constructor, env�o elemento y dirreci�n de memoria del ini
+template <typename T>
+void Lista<T>::agregaInicial(T elem) {
+    Nodo* nuevo = new Nodo(elem, ini);
     if (nuevo != nullptr) {
         ini = nuevo;
         lon++;
     }
 }
 
-template <typename T, T NADA>
-void Lista<T, NADA>::agregarPos(T elem, uint pos) {
+template <typename T>
+void Lista<T>::agregarPos(T elem, uint pos) {
     if (pos > lon) return;
     if (pos == 0) {
         agregaInicial(elem);
@@ -96,34 +86,37 @@ void Lista<T, NADA>::agregarPos(T elem, uint pos) {
         }
     }
 }
-template <typename T, T NADA>
-void Lista<T, NADA>::agregaFinal(T elem) {
-    agregarPos(elem, lon); // ;)
+
+template <typename T>
+void Lista<T>::agregaFinal(T elem) {
+    agregarPos(elem, lon);
 }
 
-template <typename T, T NADA>
-void Lista<T, NADA>::modificarInicial(T elem) {
+template <typename T>
+void Lista<T>::modificarInicial(T elem) {
     if (lon > 0) {
         ini->elem = elem;
     }
 }
-template <typename T, T NADA>
-void Lista<T, NADA>::modificarPos(T elem, uint pos) {
+
+template <typename T>
+void Lista<T>::modificarPos(T elem, uint pos) {
     if (pos >= 0 && pos < lon) {
-        Nodo* aux = ini; //variable tipo nodo con el valor del nodo ini
+        Nodo* aux = ini;
         for (int i = 0; i < pos; i++) {
-            aux = aux->sig; //asigno la direcci�n de memoria del siguiente nodo
+            aux = aux->sig;
         }
         aux->elem = elem;
     }
 }
-template <typename T, T NADA>
-void Lista<T, NADA>::modificarFinal(T elem) {
+
+template <typename T>
+void Lista<T>::modificarFinal(T elem) {
     modificarPos(elem, lon - 1);
 }
 
-template <typename T, T NADA>
-void Lista<T, NADA>::eliminaInicial() {
+template <typename T>
+void Lista<T>::eliminaInicial() {
     if (lon > 0) {
         Nodo* aux = ini;
         ini = ini->sig;
@@ -132,44 +125,37 @@ void Lista<T, NADA>::eliminaInicial() {
     }
 }
 
-//Probando...
-template <typename T, T NADA>
-void Lista<T, NADA>::eliminaPos(uint pos) {
-
-    // Cambiamos a >= para evitar desbordamientos
+template <typename T>
+void Lista<T>::eliminaPos(uint pos) {
     if (pos >= lon) return;
-
-    if (pos == 0) {
+    if (pos == 0)
         eliminaInicial();
-    }
     else {
         Nodo* aux = ini;
-        Nodo* aux2 = nullptr; // aux2 será el nodo anterior
-
-        for (int i = 0; i < pos; i++) {
+        Nodo* aux2 = ini;
+        for (int i = 0; i != pos; i++) {
             aux2 = aux;
             aux = aux->sig;
         }
-
-        // CORRECCIÓN: Conectamos el puntero 'sig' del nodo anterior al siguiente nodo
         aux2->sig = aux->sig;
-
-        delete aux; // Borramos el nodo de la memoria
+        aux->sig = nullptr;
+        delete aux;
         lon--;
     }
 }
 
-template <typename T, T NADA>
-void Lista<T, NADA>::eliminaFinal() {
-    eliminaPos(lon - 1);
+template <typename T>
+void Lista<T>::eliminaFinal() {
+    if (lon > 0) eliminaPos(lon - 1);
 }
 
-template <typename T, T NADA>
-T Lista<T, NADA>::obtenerInicial() {
-    return obtenerPos(0); //return ini->elem;
+template <typename T>
+T Lista<T>::obtenerInicial() {
+    return obtenerPos(0);
 }
-template <typename T, T NADA>
-T Lista<T, NADA>::obtenerPos(uint pos) {
+
+template <typename T>
+T Lista<T>::obtenerPos(uint pos) {
     if (pos >= 0 && pos < lon) {
         Nodo* aux = ini;
         for (int i = 0; i < pos; i++) {
@@ -178,23 +164,24 @@ T Lista<T, NADA>::obtenerPos(uint pos) {
         return aux->elem;
     }
     else {
-        return NADA;
+        return T();
     }
 }
-template <typename T, T NADA>
-T Lista<T, NADA>::obtenerFinal() {
+
+template <typename T>
+T Lista<T>::obtenerFinal() {
     return obtenerPos(lon - 1);
 }
 
-template <typename T, T NADA>
-T Lista<T, NADA>::buscar(T elem) {
+template <typename T>
+T Lista<T>::buscar(T elem) {
     Nodo* aux = ini;
     while (aux != nullptr) {
-        if (comparar(aux->elem, elem) == 0) {
+
+        if (comparar && comparar(aux->elem, elem) == 0) {
             return aux->elem;
         }
         aux = aux->sig;
     }
-    return NADA;
+    return T();
 }
-

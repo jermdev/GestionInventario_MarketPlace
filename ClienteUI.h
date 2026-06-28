@@ -97,9 +97,6 @@ class ClienteUI {
                         cout << auxCategoria << endl;
                         aumentFila++;
                     }
-                    int id = p->getId();
-                    posicion(4 + aumentFila);
-                    cout << "ID: " << id << endl;
                     };
                 gridProductos->mostrarGrid(dibujado);
                 system("pause");
