@@ -1,5 +1,7 @@
 #pragma once
 #include <windows.h>
+#include <conio.h>
+
 static void gotoXY(int x, int y) {
     COORD coord;
     coord.X = x;
