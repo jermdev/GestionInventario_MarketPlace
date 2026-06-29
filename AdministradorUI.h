@@ -55,7 +55,7 @@ class AdministradorUI {
         cout << "\033[?25l";
 
         // =======================================================
-        // INTEGRACIÓN PASO 3: SUBMENÚ DE ORDENAMIENTO (MouseMenu)
+        // INTEGRACIï¿½N PASO 3: SUBMENï¿½ DE ORDENAMIENTO (MouseMenu)
         // =======================================================
         string opcSort[] = {
             "[ Ver en orden normal ]",
@@ -145,7 +145,7 @@ class AdministradorUI {
         system("cls");
         gotoXY(x, 1);
 
-        // Título dinámico
+        // Tï¿½tulo dinï¿½mico
         if (sel == 0) cout << "====== VER PRODUCTOS (Orden Normal) ======";
         else if (sel == 1) cout << "====== VER PRODUCTOS (QuickSort: Por Precio) ======";
         else if (sel == 2) cout << "====== VER PRODUCTOS (MergeSort: Alfabeticamente) ======";
