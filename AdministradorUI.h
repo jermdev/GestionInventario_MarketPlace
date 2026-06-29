@@ -7,40 +7,6 @@ using namespace std;
 
 class AdministradorUI {
 
-    static void menuVerProductos(Administrador* uService) {
-        string opciones[] = {
-            "[ Mostrar todos los productos ]",
-            "[    Filtrar por categoria    ]",
-            "[     Ordenar por precio      ]",
-            "[           Volver            ]"
-        };
-        const int total = 4;
-
-        while (true) {
-            system("cls");
-            cout << "\033[?25l";
-
-            gotoXY(60 - 13, 8);
-            cout << "====== VER PRODUCTOS ======";
-
-            int sel = menuConMouse(opciones, total, 60, 11);
-            cout << "\033[?25h";
-
-            switch (sel) {
-            case 0:
-                // mostrar todos los productos - pendiente de implementar
-                break;
-            case 1:
-                // filtrar por categoria - pendiente de implementar
-                break;
-            case 2:
-                // ordenar por precio - pendiente de implementar
-                break;
-            case 3:
-                return;
-            }
-        }
-    }
 
 public:
     static void Render(Administrador* admin) {
@@ -64,44 +30,96 @@ public:
         while (true) {
             system("cls");
             cout << "\033[?25l";
-
-            gotoXY(60 - 16, 6);
-            cout << "====== MENU ADMINISTRADOR ======";
-
             int sel = menuConMouse(opciones, totalOpciones, 60, 9);
-            cout << "\033[?25h";
+
 
             switch (sel) {
             case 0:
                 system("cls");
                 uService->mostrarTodosLosProductos();
                 break;
-            case 1:
+
+            case 2: { // Editar Productos
+                int id, stock; string nNombre, nCat; double nPrecio;
+                cout << "Ingrese el ID del producto a editar: "; cin >> id;
+                cin.ignore();
+                cout << "Nuevo Nombre: "; getline(cin, nNombre);
+                cout << "Nueva Categoria: "; getline(cin, nCat);
+                cout << "Nuevo Precio: "; cin >> nPrecio;
+                cout << "Nuevo Stock: "; cin >> stock;
+                uService->editarProductoGlobal(id, nNombre, nCat, nPrecio, stock);
+                system("pause");
                 break;
-            case 2:
+            }
+
+            case 3: { // Borrar Productos
+                int id;
+                cout << "Ingrese el ID del producto a borrar: "; cin >> id;
+                uService->eliminarProductoGlobal(id);
+                system("pause");
                 break;
-            case 3:
-                system("cls");
+            }
+
+            case 4: // Ver Usuarios
                 uService->mostrarTodosLosUsuarios();
                 break;
-            case 4:
-                break;
-            case 5:
-                break;
-            case 6: {
+
+            case 5: { // Editar Usuario
                 string correo;
-                cout << "Dijite la categoria que quiere buscar: "; cin >> correo;
+                cout << "Ingrese el correo del usuario a editar: "; cin >> correo;
+
+                Usuario* u = uService->obtenerUsuarioParaEditar(correo);
+                if (u != nullptr) {
+                    string nNombre, nDir, nPass;
+                    cin.ignore();
+                    cout << "Nuevo Nombre: "; getline(cin, nNombre);
+                    cout << "Nueva Direccion: "; getline(cin, nDir);
+                    cout << "Nueva Contrasena: "; cin >> nPass;
+
+                    u->setNombre(nNombre);
+                    u->setDireccion(nDir);
+                    u->setContrasenia(nPass);
+
+                    uService->modificarUsuario(u);
+                }
+                else {
+                    cout << u8"Usuario no encontrado.\n";
+                }
+                system("pause");
+                break;
+            }
+
+            case 6: { // Borrar Usuario
+                string correo;
+                cout << "Ingrese el correo del usuario a borrar: "; cin >> correo;
+                uService->eliminarUsuario(correo);
+                system("pause");
+                break;
+            }
+
+            case 7: { // Ver Pedidos
+                string correo;
+                cout << "Digite el correo del usuario que quiere buscar: "; cin >> correo;
                 uService->verPedidos(correo);
+                system("pause");
                 break;
             }
-            case 7:
-                break;
+
             case 8:
+                cout << u8"Opcion de editar pedidos (En desarrollo)...\n";
+                system("pause");
                 break;
+
             case 9:
-                cout << "Cerrando sesion...\n";
-                return;
+                cout << u8"Opcion de borrar pedidos (En desarrollo)...\n";
+                system("pause");
+                break;
+
+            default:
+                cout << "Opcion no valida.\n";
+                break;
             }
+            
         }
     }
 };
