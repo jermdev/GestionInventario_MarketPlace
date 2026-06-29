@@ -363,6 +363,102 @@ class ClienteUI {
         }
     }
 
+    static void menuCompra(Cliente* cli, ClienteService* uService) {
+        string opciones[] = {
+            "[    Confirmar compra     ]",
+            "[ Ver resumen (Carrito)   ]",
+            "[         Volver          ]"
+        };
+        const int total = 3;
+
+        while (true) {
+            system("cls");
+            cout << "\033[?25l";
+
+            gotoXY(60 - 14, 10);
+            cout << "====== REALIZAR COMPRA ======";
+
+            int sel = menuConMouse(opciones, total, 60, 13);
+            cout << "\033[?25h";
+
+            int mPago, tComp; char tar; string numTar, cvv;
+
+            switch (sel) {
+            case 0:
+                system("cls");
+                gotoXY(12, 8);
+                if (cli->getCarrito()->getProductos()->esVacia()) {
+                    cout << "Tu carrito esta vacio. No puedes comprar.\n";
+                    break;
+                }
+                cout << "Metodo de Pago (0: Tarjeta Regalo, 1: Tarjeta): ";
+                cin >> mPago;
+                cout << "Tipo Comprobante (0: Boleta, 1: Factura): ";
+                cin >> tComp;
+                cout << "Ingrese su numero de tarjeta: ";
+                cin >> numTar;
+                cout << "Ingrese su CVV: ";
+                while (true) {
+                    tar = _getch();
+                    if (tar == '\r') {
+                        break;
+                    }
+                    else if (tar == '\b') {
+                        if (cvv.length() > 0) {
+                            cvv.pop_back();
+                            cout << "\b \b";
+                        }
+                    }
+                    else {
+                        cvv += tar;
+                        cout << "*";
+                    }
+                }
+                uService->realizarCompraProductos(cli->getId(), cli, static_cast<MetodoPago>(mPago), static_cast<TipoComprobante>(tComp));
+                cout << "Producto comprado correctamente. Revisar Pedidos.";
+                system("pause > 0");
+                break;
+
+            case 1:
+                cli->getCarrito()->listarCarrito();
+                break;
+
+            case 2:
+                return;
+            }
+        }
+    }
+
+    static void menuHistorialPedidos(Cliente* cli, ClienteService* uService) {
+        string opciones[] = {
+            "[ Ver todos los pedidos ]",
+            "[        Volver         ]"
+        };
+        const int total = 2;
+
+        while (true) {
+            system("cls");
+            cout << "\033[?25l";
+
+            gotoXY(60 - 16, 10);
+            cout << "====== HISTORIAL DE PEDIDOS ======";
+
+            int sel = menuConMouse(opciones, total, 60, 13);
+            cout << "\033[?25h";
+
+            switch (sel) {
+            case 0:
+                system("cls");
+                uService->listarPedidos(cli->getId());
+                system("pause>0");
+                break;
+
+            case 1:
+                return;
+            }
+        }
+    }
+
 public:
     static void Render(Cliente* cli) {
         ClienteService* uService = new ClienteService();
@@ -400,10 +496,10 @@ public:
                 menuCarrito(cli, uService);
                 break;
             case 3:
-                //menuCompra(cli, uService);
+                 menuCompra(cli, uService);
                 break;
             case 4:
-                //menuHistorialPedidos(cli, uService);
+                 menuHistorialPedidos(cli, uService);
                 break;
             case 5:
                 cout << "\033[?25h";
