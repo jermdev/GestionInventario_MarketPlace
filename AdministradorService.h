@@ -38,9 +38,6 @@ public:
 		system("pause");
 	}
 
-	void eliminarProductoGlobal(int id) {
-		productoService->eliminarProducto(id);
-	}
 
 	void editarProductoGlobal(int id, string nNombre, string nCat, double nPrecio, int nStock) {
 		Producto* p = productoService->buscarProductoPorId(0, [id](Producto* prod) { return prod->getId() == id; });
@@ -51,7 +48,7 @@ public:
 			p->setPrecio(nPrecio);
 			p->setStock(nStock);
 			productoService->guardarProductos(); // guarda los cambios en el txt
-			cout << u8"\nProducto modificado con éxito.\n";
+			cout << u8"\nProducto modificado con ï¿½xito.\n";
 		}
 		else {
 			cout << u8"\nError: Producto no encontrado.\n";
@@ -62,10 +59,10 @@ public:
 		int nuevoId = rand() % 9000 + 1000;
 		Producto* p = new Producto(nombre, cat, precio, nuevoId, 0, stock);
 		productoService->agregarProducto(p, 0);
-		cout << u8"\nProducto publicado con éxito. ID asignado: " << nuevoId << "\n";
+		cout << u8"\nProducto publicado con ï¿½xito. ID asignado: " << nuevoId << "\n";
 	}
 
-	// Función auxiliar para editar usuarios
+	// Funciï¿½n auxiliar para editar usuarios
 	Usuario* obtenerUsuarioParaEditar(string correo) {
 		return usuarioService->buscarPorCorreo(correo);
 	}
