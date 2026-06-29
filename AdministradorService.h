@@ -24,8 +24,9 @@ public:
 	void inicializarTodosLosProductos() { productoService->iniciaizarProductos(); }
 
 
-	Lista<Pedido*>* obtenerPedidos() { return pedidoService->obtenerPedidosHistoricos(); }
-	Lista<Usuario*>* obtenerUsuarios() { return usuarioService->obtenerTodos(); }
+	Lista<Pedido*>*   obtenerPedidos()             { return pedidoService->obtenerPedidosHistoricos(); }
+	Lista<Usuario*>*  obtenerUsuarios()            { return usuarioService->obtenerTodos(); }
+	Lista<Producto*>* obtenerTodosLosProductos()   { return productoService->obtenerPorductosPorCondicion(0, [](Producto* p) { return true; }); }
 
 	void mostrarTodosLosProductos() {
 		productoService->mostrarInventario();

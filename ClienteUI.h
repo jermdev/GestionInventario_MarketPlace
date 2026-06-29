@@ -11,8 +11,6 @@ using namespace std;
 
 class ClienteUI {
 
-    // ========== HELPERS para formato de texto ==========
-
     static string truncate(const string& text, size_t maxLen) {
         if (text.length() <= maxLen) return text;
         return text.substr(0, maxLen - 3) + "...";

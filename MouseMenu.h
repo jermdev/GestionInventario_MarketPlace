@@ -15,10 +15,6 @@ static void habilitarMouse() {
     SetConsoleMode(hIn, modo);
 }
 
-// Muestra las opciones centradas en la consola y espera un clic del mouse.
-// centroX: columna central (usa 60 para consola de 120).
-// inicioY: fila donde empieza la primera opcion.
-// Retorna el indice de la opcion clickeada (0-based).
 static int menuConMouse(string opciones[], int total, int centroX, int inicioY) {
     habilitarMouse();
 
@@ -48,33 +44,31 @@ static int menuConMouse(string opciones[], int total, int centroX, int inicioY) 
     }
 }
 
-// Lee un campo de texto caracter por caracter.
-// Retorna false si el usuario presiona ESC, true si presiona Enter.
-// Si ocultar=true muestra '*' en lugar del caracter (para contrasenas).
+
 static bool leerCampo(string& resultado, bool ocultar = false) {
     resultado = "";
     int ch;
     while (true) {
         ch = _getch();
-        if (ch == 27) return false;      // ESC -> cancelar
-        if (ch == '\r') return true;     // Enter -> confirmar
-        if (ch == '\b') {                // Backspace
+        if (ch == 27) return false;
+        if (ch == '\r') return true;
+        if (ch == '\b') {
             if (resultado.length() > 0) {
                 resultado.pop_back();
                 cout << "\b \b";
             }
         }
-        else if (ch == 0 || ch == 224) { // tecla extendida (flechas, etc.)
-            _getch();                     // consumir segundo byte
+        else if (ch == 0 || ch == 224) {
+            _getch();                     
         }
-        else if (ch >= 32) {             // caracter imprimible
+        else if (ch >= 32) {             
             resultado += (char)ch;
             cout << (ocultar ? '*' : (char)ch);
         }
     }
 }
 
-// Lee un numero entero. Retorna false si el usuario presiona ESC.
+
 static bool leerEntero(int& resultado) {
     string texto;
     if (!leerCampo(texto)) return false;
@@ -82,7 +76,7 @@ static bool leerEntero(int& resultado) {
     return true;
 }
 
-// Lee un numero decimal. Retorna false si el usuario presiona ESC.
+
 static bool leerDecimal(double& resultado) {
     string texto;
     if (!leerCampo(texto)) return false;
