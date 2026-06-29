@@ -5,6 +5,7 @@
 #include "ComponenteUI.h"
 #include "gotoxy.h"
 #include "MouseMenu.h"
+#include "Ordenamiento.h"
 using namespace std;
 
 class AdministradorUI {
@@ -44,7 +45,7 @@ class AdministradorUI {
         cout << string(120, ' ');
         gotoXY(x, infoY);
         cout << "Pagina " << (paginaActual + 1) << " de " << totalPages
-             << " | Flechas arriba/abajo para navegar | ESC para salir";
+            << " | Flechas arriba/abajo para navegar | ESC para salir";
     }
 
     // ========== PRODUCTOS ==========
@@ -53,16 +54,62 @@ class AdministradorUI {
         system("cls");
         cout << "\033[?25l";
 
+        // =======================================================
+        // INTEGRACIÓN PASO 3: SUBMENÚ DE ORDENAMIENTO (MouseMenu)
+        // =======================================================
+        string opcSort[] = {
+            "[ Ver en orden normal ]",
+            "[ Ordenar por Precio (QuickSort) ]",
+            "[ Ordenar Alfabeticamente (MergeSort) ]",
+            "[ Volver ]"
+        };
+
+        gotoXY(60 - 15, 2);
+        cout << "====== OPCIONES DE VISTA ======";
+        int sel = menuConMouse(opcSort, 4, 60, 5);
+
+        if (sel == 3 || sel == -1) { // Si elige Volver
+            cout << "\033[?25h";
+            return;
+        }
+
+        // Obtenemos los productos
         Lista<Producto*>* productos = svc->obtenerTodosLosProductos();
 
         if (productos == nullptr || productos->esVacia()) {
+            system("cls");
             gotoXY(60 - 14, 14);
             cout << "No hay productos registrados.";
             cout << "\033[?25h";
             system("pause");
-            delete productos;
+            if (productos) delete productos;
             return;
         }
+
+        if (sel == 1 || sel == 2) {
+            int n = productos->longitud();
+            Producto** arr = new Producto * [n];
+
+            // 1. Pasamos de Lista a Arreglo
+            for (int i = 0; i < n; i++) {
+                arr[i] = productos->obtenerPos(i);
+            }
+
+            // 2. Ordenamos
+            if (sel == 1) quicksort(arr, 0, n - 1); // QuickSort por Precio
+            else if (sel == 2) mergeSort(arr, n);   // MergeSort por Nombre
+
+            // 3. Volvemos a meter al Arreglo en una nueva Lista para tu GridView
+            Lista<Producto*>* listaOrdenada = new Lista<Producto*>();
+            for (int i = 0; i < n; i++) {
+                listaOrdenada->agregaFinal(arr[i]);
+            }
+
+            delete productos; // Borramos el contenedor de la lista vieja
+            productos = listaOrdenada; // Reemplazamos
+            delete[] arr; // Limpiamos la RAM del arreglo temporal
+        }
+        // =======================================================
 
         Lista<ComponenteUI<Producto*>*>* cards = new Lista<ComponenteUI<Producto*>*>();
         for (int i = 0; i < productos->longitud(); i++)
@@ -71,12 +118,12 @@ class AdministradorUI {
         CONSOLE_SCREEN_BUFFER_INFO csbi;
         GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi);
         int ancho = csbi.srWindow.Right - csbi.srWindow.Left + 1;
-        int alto  = csbi.srWindow.Bottom - csbi.srWindow.Top + 1;
+        int alto = csbi.srWindow.Bottom - csbi.srWindow.Top + 1;
 
         const int x = 2, y = 3;
         const int cellWidth = 22, cellHeight = 7;
         const int gridAncho = ancho - 4;
-        const int gridAlto  = alto - 8;
+        const int gridAlto = alto - 8;
 
         GridView<Producto*>* grid = new GridView<Producto*>(
             cards, x, y, gridAncho, gridAlto, cellWidth, cellHeight, 1, 1);
@@ -90,14 +137,19 @@ class AdministradorUI {
             posicion(line++); cout << "ID: " << p->getId();
             posicion(line++); cout << "Stock: " << p->getStock();
             posicion(line++); cout << string(cellWidth, '-');
-        };
+            };
 
         int infoY = y + gridAlto + 1;
         bool salir = false;
 
         system("cls");
         gotoXY(x, 1);
-        cout << "====== VER PRODUCTOS (Grid) ======";
+
+        // Título dinámico
+        if (sel == 0) cout << "====== VER PRODUCTOS (Orden Normal) ======";
+        else if (sel == 1) cout << "====== VER PRODUCTOS (QuickSort: Por Precio) ======";
+        else if (sel == 2) cout << "====== VER PRODUCTOS (MergeSort: Alfabeticamente) ======";
+
         grid->mostrarGrid(dibujado);
         mostrarInfoPagina(grid->getPaginaActual(), grid->getTotalPages(), x, infoY);
 
@@ -117,7 +169,11 @@ class AdministradorUI {
 
                 system("cls");
                 gotoXY(x, 1);
-                cout << "====== VER PRODUCTOS (Grid) ======";
+
+                if (sel == 0) cout << "====== VER PRODUCTOS (Orden Normal) ======";
+                else if (sel == 1) cout << "====== VER PRODUCTOS (QuickSort: Por Precio) ======";
+                else if (sel == 2) cout << "====== VER PRODUCTOS (MergeSort: Alfabeticamente) ======";
+
                 grid->mostrarGrid(dibujado);
                 mostrarInfoPagina(grid->getPaginaActual(), grid->getTotalPages(), x, infoY);
             }
@@ -252,9 +308,9 @@ class AdministradorUI {
 
         gotoXY(x, 3);
         cout << padRight("ID", 5) << " | "
-             << padRight("Nombre", 20) << " | "
-             << padRight("Correo", 28) << " | "
-             << "Tipo";
+            << padRight("Nombre", 20) << " | "
+            << padRight("Correo", 28) << " | "
+            << "Tipo";
 
         gotoXY(x, 4);
         cout << string(72, '-');
@@ -262,10 +318,10 @@ class AdministradorUI {
         for (int i = 0; i < n; i++) {
             Usuario* u = usuarios->obtenerPos(i);
             gotoXY(x, 5 + i);
-            cout << padLeft(to_string(u->getId()), 5)             << " | "
-                 << padRight(truncate(u->getNombre(), 20), 20)    << " | "
-                 << padRight(truncate(u->getCorreo(), 28), 28)    << " | "
-                 << u->getTipoUsuario();
+            cout << padLeft(to_string(u->getId()), 5) << " | "
+                << padRight(truncate(u->getNombre(), 20), 20) << " | "
+                << padRight(truncate(u->getCorreo(), 28), 28) << " | "
+                << u->getTipoUsuario();
         }
 
         if (n == 0) {
@@ -370,10 +426,10 @@ class AdministradorUI {
 
         gotoXY(x, 3);
         cout << padRight("ID Ped", 7) << " | "
-             << padRight("Cliente", 9) << " | "
-             << padRight("Estado", 22) << " | "
-             << padRight("Fecha", 15) << " | "
-             << "Items";
+            << padRight("Cliente", 9) << " | "
+            << padRight("Estado", 22) << " | "
+            << padRight("Fecha", 15) << " | "
+            << "Items";
 
         gotoXY(x, 4);
         cout << string(70, '-');
@@ -382,11 +438,11 @@ class AdministradorUI {
             Pedido* p = pedidos->obtenerPos(i);
             int items = p->getProductosComprados() ? p->getProductosComprados()->longitud() : 0;
             gotoXY(x, 5 + i);
-            cout << padLeft(to_string(p->getIdPedido()), 7)          << " | "
-                 << padLeft(to_string(p->getIdCliente()), 9)          << " | "
-                 << padRight(estadoStr(p->getEstadoPedido()), 22)     << " | "
-                 << padRight(p->getFechaEntrega(), 15)                << " | "
-                 << padLeft(to_string(items), 5);
+            cout << padLeft(to_string(p->getIdPedido()), 7) << " | "
+                << padLeft(to_string(p->getIdCliente()), 9) << " | "
+                << padRight(estadoStr(p->getEstadoPedido()), 22) << " | "
+                << padRight(p->getFechaEntrega(), 15) << " | "
+                << padLeft(to_string(items), 5);
         }
 
         if (n == 0) {
@@ -414,8 +470,8 @@ public:
             "[ Editar Usuario   ]",
             "[ Borrar Usuario   ]",
             "[   Ver Pedidos    ]",
-            "[ Editar Pedidos   ]",
-            "[ Borrar Pedidos   ]",
+            "[  Editar Pedidos  ]",
+            "[  Borrar Pedidos  ]",
             "[  Cerrar Sesion   ]"
         };
         const int totalOpciones = 11;
@@ -425,14 +481,14 @@ public:
             cout << "\033[?25l";
 
             gotoXY(60 - 16, 4);
-            cout << "====== Bienvenido, "<< admin->getNombre() << " ======";
+            cout << "====== Bienvenido, " << admin->getNombre() << " ======";
 
             int sel = menuConMouse(opciones, totalOpciones, 60, 7);
             cout << "\033[?25h";
 
             switch (sel) {
-            case 0:  menuVerProductos(uService);break;
-            case 1:  menuAgregarProducto(uService);break;
+            case 0:  menuVerProductos(uService); break;
+            case 1:  menuAgregarProducto(uService); break;
             case 2:  menuEditarProducto(uService); break;
             case 3:  menuBorrarProducto(uService); break;
             case 4:  menuVerUsuarios(uService); break;

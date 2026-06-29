@@ -2,6 +2,7 @@
 #include "PedidoService.h"
 #include "ProductoService.h"
 #include "UsuarioService.h"
+#include "Ordenamiento.h"
 
 class AdministradorService {
 private:
@@ -115,6 +116,39 @@ public:
 	void eliminarProductoGlobal(int idProducto) {
 		productoService->eliminarProducto(idProducto);
 		cout << "\nProducto eliminado del sistema.\n";
+	}
+
+	// Función para mostrar ordenado por Precio usando QuickSort
+	void mostrarProductosOrdenadosPorPrecio() {
+		Lista<Producto*>* productos = productoService->obtenerPorductosPorCondicion(0, [](Producto* p) { return true; });
+		int n = productos->longitud();
+		if (n == 0) { cout << "No hay productos.\n"; return; }
+
+		// Pasamos de Lista a Arreglo nativo
+		Producto** arr = new Producto * [n];
+		for (int i = 0; i < n; i++) arr[i] = productos->obtenerPos(i);
+
+		quicksort(arr, 0, n - 1);
+
+		for (int i = 0; i < n; i++) arr[i]->MostrarProducto();
+
+		delete[] arr; // Limpiamos memoria
+	}
+
+	// Función para mostrar ordenado por Nombre usando MergeSort
+	void mostrarProductosOrdenadosPorNombre() {
+		Lista<Producto*>* productos = productoService->obtenerPorductosPorCondicion(0, [](Producto* p) { return true; });
+		int n = productos->longitud();
+		if (n == 0) { cout << "No hay productos.\n"; return; }
+
+		Producto** arr = new Producto * [n];
+		for (int i = 0; i < n; i++) arr[i] = productos->obtenerPos(i);
+
+		mergeSort(arr, n);
+
+		for (int i = 0; i < n; i++) arr[i]->MostrarProducto();
+
+		delete[] arr;
 	}
 
 	void editarProductoGlobal(int id, string nNombre, string nCat, double nPrecio) {
