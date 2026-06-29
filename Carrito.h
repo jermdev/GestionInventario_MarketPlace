@@ -87,7 +87,7 @@ public:
 		int id = producto->getId();
 
 		NProductos* existente = tablaCarrito->buscar(id);
-
+		
 		if (existente != nullptr) {
 			if (producto->getStock() < (existente->cantidad + cantidadSolicitada)) {
 				cout << "Stock insuficiente para agregar mas unidades de " << producto->getNombre() << endl;
