@@ -116,9 +116,6 @@
     <ClInclude Include="ProductoService.h">
       <Filter>service</Filter>
     </ClInclude>
-    <ClInclude Include="Envio.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="UsuarioService.h">
       <Filter>service</Filter>
     </ClInclude>
@@ -166,6 +163,21 @@
     </ClInclude>
     <ClInclude Include="gotoxy.h">
       <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="HashEntidad.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="HashTabla.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ArbolAVL.hpp">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="NodoAVL.hpp">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Envio.h">
+      <Filter>core</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

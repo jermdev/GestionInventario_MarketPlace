@@ -127,6 +127,7 @@
     <ClInclude Include="AdministradorBuilder.h" />
     <ClInclude Include="AdministradorService.h" />
     <ClInclude Include="AdministradorUI.h" />
+    <ClInclude Include="ArbolAVL.hpp" />
     <ClInclude Include="Auth.h" />
     <ClInclude Include="ClienteService.h" />
     <ClInclude Include="Cola.h" />
@@ -150,6 +151,7 @@
     <ClInclude Include="IniciarSesion.h" />
     <ClInclude Include="Lista.h" />
     <ClInclude Include="Nodo.h" />
+    <ClInclude Include="NodoAVL.hpp" />
     <ClInclude Include="Ordenamiento.h" />
     <ClInclude Include="Pago.h" />
     <ClInclude Include="pch.h" />
