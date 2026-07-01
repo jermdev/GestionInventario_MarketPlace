@@ -1,5 +1,5 @@
 4;Galaxy S25;celular;3200.000000;130001;4
-4;Redmi Note 14;celular;1200.000000;130002;7
+4;Redmi Note 14;celular;1200.000000;130002;5
 4;Motorola Edge 60;celular;2100.000000;130003;3
 4;Honor X9c;celular;1450.000000;130004;6
 4;Realme GT 7;celular;2500.000000;130005;2
