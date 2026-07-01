@@ -49,12 +49,11 @@ public:
 		numeroProductos = 0;
 		precioDelCarrito = 0;
 	}
-
+	//Este metodo no se usa, porque ahora se realizo en la UI
 	void listarCarrito() {
 		int nProductos = productos->longitud();
 		if (nProductos == 0) {
-			cout << "El carrito esta vacio.\n";
-			system("pause > nul");
+			
 			return;
 		}
 
@@ -103,7 +102,7 @@ public:
 
 		numeroProductos += cantidadSolicitada;
 		precioDelCarrito += (producto->getPrecio() * cantidadSolicitada);
-		cout << "Producto agregado exitosamente." << endl;
+		
 	}
 
 	void borrarProducto(int id, int cantidad) {
@@ -130,7 +129,7 @@ public:
 			precioDelCarrito -= (item->producto->getPrecio() * cantidadEliminada);
 			delete item;
 
-			cout << "Producto eliminado completamente del carrito." << endl;
+		
 		}
 		else {
 			item->cantidad -= cantidad;

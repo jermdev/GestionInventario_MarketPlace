@@ -1,6 +1,7 @@
 #pragma once
 #include <iostream>
 #include "Comprobante.h"
+#include "gotoxy.h"
 using namespace std;
 
 enum MetodoPago {
@@ -54,6 +55,6 @@ public:
 			cout << "No hay comprobante asociado a este pago." << endl;
 		}
 	}
-
+	
 
 };

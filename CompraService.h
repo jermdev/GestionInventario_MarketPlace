@@ -32,7 +32,7 @@ public:
 		// No eliminar inventario ni pedido aquí: son inyectados y su ciclo de vida lo debe controlar el creador.
 	}
 
-	void generarCompra(Cliente* cli, MetodoPago metodo, TipoComprobante tipoComp) {
+	void generarCompra(Cliente* cli, MetodoPago metodo, TipoComprobante tipoComp,string extra) {
 		// recuperamos los productos que estan en el carrito
 		Lista<NProductos*>* items = cli->getCarrito()->getProductos();
 
@@ -80,7 +80,7 @@ public:
 
 			// Si el producto del carrito es otra instancia, sincronizar su stock también
 			item->producto->setStock(nuevoStock);
-
+			
 			montoTotal += (prodInventario->getPrecio() * item->cantidad);
 			pesoTotal += (1.50 * item->cantidad);
 
@@ -93,7 +93,7 @@ public:
 		inventario->guardarProductos();
 
 		string fechaActual = obtenerFechaActual();
-		Comprobante* com = new Comprobante(cli->getId(), fechaActual, montoTotal, tipoComp);
+		Comprobante* com = new Comprobante(cli->getId(), fechaActual, montoTotal, tipoComp,extra);
 		Pago* pag = new Pago(com, metodo, montoTotal);
 		pag->realizarPago(metodo, montoTotal);
 
