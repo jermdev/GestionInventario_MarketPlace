@@ -8,7 +8,8 @@ using namespace std;
 enum EstadoPedido {
 	ENTREGADO,
 	PENDIENTEDEENTREGA,
-	CANCELADO
+	CANCELADO,
+	INDEFINIDO
 };
 
 class Pedido
@@ -33,6 +34,24 @@ public:
 		this->fechaEntrega = fechaEntrega;
 	}
 
+	Pedido(int id) {
+		this->idPedido = id;
+		this->idCliente = 0;
+		this->peso = 0;
+		this->estadopedido = INDEFINIDO;
+		this->productosComprados = nullptr;
+		this->fechaEntrega = "";
+	}
+
+	Pedido() {
+		this->idPedido = 0;
+		this->idCliente = 0;
+		this->peso = 0;
+		this->estadopedido = INDEFINIDO;
+		this->productosComprados = nullptr;
+		this->fechaEntrega = "";
+	}
+
 	~Pedido()
 	{
 		// Liberar la lista de NProductos; no se asume propiedad de Producto*
@@ -52,6 +71,9 @@ public:
 	void setEstadoPedido(EstadoPedido nuevoEstado) {
 		this->estadopedido = nuevoEstado;
 	}
+
+	void setFechaEntrega(string fecha) { this->fechaEntrega = fecha; }
+	void setPeso(double peso) { this->peso = peso; }
 
 	void mostrarDetallePedido() {
 		cout << "\n===== DETALLE DEL PEDIDO =====" << endl;

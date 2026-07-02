@@ -17,114 +17,85 @@ private:
     const string ARCHIVO_PEDIDOS = "pedidos.txt";
     const char DELIMITADOR = '|';
 
+    vector<string> construirFila(Pedido* pedido) {
+        vector<string> fila;
+        fila.push_back(to_string(pedido->getIdPedido()));
+        fila.push_back(to_string(pedido->getIdCliente()));
+        fila.push_back(to_string(pedido->getPeso()));
+        fila.push_back(to_string(static_cast<int>(pedido->getEstadoPedido())));
+        fila.push_back(pedido->getFechaEntrega());
+
+        Lista<NProductos*>* productos = pedido->getProductosComprados();
+        int cantidadProductos = (productos != nullptr) ? productos->longitud() : 0;
+        fila.push_back(to_string(cantidadProductos));
+
+        string productosTexto = "";
+        for (int i = 0; i < cantidadProductos; i++) {
+            NProductos* np = productos->obtenerPos(i);
+            if (np == nullptr || np->producto == nullptr || np->cantidad <= 0) continue;
+            if (!productosTexto.empty()) productosTexto += ",";
+            productosTexto += to_string(np->producto->getId()) + ":" + to_string(np->cantidad);
+        }
+        fila.push_back(productosTexto);
+        return fila;
+    }
+
+
+    void guardarListaCompleta(Lista<Pedido*>* lista) {
+        if (lista == nullptr) return;
+        vector<vector<string>> data;
+        int n = lista->longitud();
+        for (int i = 0; i < n; i++) {
+            Pedido* p = lista->obtenerPos(i);
+            if (p == nullptr) continue;
+            data.push_back(construirFila(p));
+        }
+        gestor.guardarLineas(ARCHIVO_PEDIDOS, data, DELIMITADOR);
+    }
 public:
-    PedidoService() {}
+    PedidoService() {
+        pedidos = new Lista<Pedido*>();
+    }
 
     void registrarPedido(Pedido* pedido) {
 
         // Validación
-        if (pedido == nullptr) return;
+       if (pedido == nullptr) return;
 
-        vector<vector<string>> dataExistente;
-
-        // Leer archivo si existe
-        if (gestor.archivoExiste(ARCHIVO_PEDIDOS)) {
-            dataExistente =
-                gestor.leerLineasString(
-                    ARCHIVO_PEDIDOS,
-                    DELIMITADOR
-                );
-        }
-
-        vector<string> nuevaFila;
-
-        // Formato elegido:
-        // idPedido | idUsuario | peso | estado | fechaEntrega | lineasProductos | pares id:cantidad
-
-        nuevaFila.push_back(to_string(pedido->getIdPedido()));
-        nuevaFila.push_back(to_string(pedido->getIdCliente()));
-
-        nuevaFila.push_back(
-            to_string(pedido->getPeso())
-        );
-
-        nuevaFila.push_back(
-            to_string(
-                static_cast<int>(
-                    pedido->getEstadoPedido()
-                    )
-            )
-        );
-
-        nuevaFila.push_back(
-            pedido->getFechaEntrega()
-        );
-
-        // =========================
-        // PRODUCTOS
-        // =========================
-
-        Lista<NProductos*>* productos =
-            pedido->getProductosComprados();
-
-        int cantidadProductos =
-            productos->longitud();
-
-        nuevaFila.push_back(
-            to_string(cantidadProductos)
-        );
-
-        /*
-            FORMATO:
-            id:cantidad,id:cantidad
-
-            Ejemplo:
-            12:2,30:1,44:5
-        */
-
-        string productosTexto = "";
-
-        for (int i = 0; i < cantidadProductos; i++) {
-
-            NProductos* np =
-                productos->obtenerPos(i);
-
-            // Validaciones
-            if (np == nullptr) continue;
-
-            if (np->producto == nullptr) continue;
-
-            if (np->cantidad <= 0) continue;
-
-            // Separador coma
-            if (!productosTexto.empty()) {
-                productosTexto += ",";
-            }
-
-            productosTexto +=
-                to_string(np->producto->getId());
-
-            productosTexto += ":";
-
-            productosTexto +=
-                to_string(np->cantidad);
-        }
-
-        nuevaFila.push_back(productosTexto);
-
-        // =========================
-        // GUARDAR
-        // =========================
-
-        dataExistente.push_back(nuevaFila);
-
-        gestor.guardarLineas(
-            ARCHIVO_PEDIDOS,
-            dataExistente,
-            DELIMITADOR
-        );
+    vector<vector<string>> dataExistente;
+    if (gestor.archivoExiste(ARCHIVO_PEDIDOS)) {
+        dataExistente = gestor.leerLineasString(ARCHIVO_PEDIDOS, DELIMITADOR);
     }
 
+    vector<string> nuevaFila = construirFila(pedido);
+
+    // Buscar si ya existe una fila con el mismo idPedido y reemplazarla
+    bool encontrado = false;
+    for (auto& fila : dataExistente) {
+        if (!fila.empty() && fila[0] == nuevaFila[0]) {
+            fila = nuevaFila;
+            encontrado = true;
+            break;
+        }
+    }
+    if (!encontrado) {
+        dataExistente.push_back(nuevaFila);
+    }
+
+    gestor.guardarLineas(ARCHIVO_PEDIDOS, dataExistente, DELIMITADOR);
+    }
+
+    bool limpiarArchivoPedido() {
+        string ubicacion = ARCHIVO_PEDIDOS;
+        std::ofstream ofs(ubicacion, std::ofstream::out | std::ofstream::trunc);
+        if (!ofs.is_open()) {
+            std::cerr << "No se pudo abrir el archivo para truncar: " << ubicacion << "\n";
+            return false;
+        }
+        
+        ofs.close();
+        return true;
+    }
 
     EstadoPedido estadoPedido(string fechaEntrega, EstadoPedido estadoActual) {
         string hoy = obtenerFechaActual();
@@ -141,6 +112,11 @@ public:
     }
 
     void setPedidos(Lista<Pedido*>* pedidos) { this->pedidos = pedidos; }
+
+    void GuardarTodoLosPedidosEnArchivo() {
+        if (pedidos == nullptr) return;
+        guardarListaCompleta(pedidos);
+    }
 
     // Reconstruye pedidos historicos: usa ProductoService para obtener Producto* por id y preserva cantidad
     template<class T>
@@ -159,6 +135,7 @@ public:
 
         return resultado;
     }
+
 
     Lista<Pedido*>* obtenerPedidosHistoricos() {
 
@@ -237,6 +214,13 @@ public:
                                     np->cantidad = cantidad;
 
                                     productosDelPedido->agregaFinal(np);
+                                }
+                                else {
+                                    cerr << "[ADVERTENCIA] Pedido " << idPedido
+                                        << ": producto id=" << idProducto
+                                        << " no encontrado en el catálogo. Se omite del pedido.\n";
+                                    // Opcional: marcar el pedido como "requiere revisión"
+                                    system("pause>nul");
                                 }
                             }
                         }

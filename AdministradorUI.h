@@ -456,6 +456,161 @@ class AdministradorUI {
         system("pause");
     }
 
+    static void editarPedido(AdministradorService* admin) {
+        system("cls");
+        cout << "\033[?25h";
+
+        const int izqX = 42;
+        const int inputX = 64;
+
+        gotoXY(60 - 12, 4);
+        cout << "====== EDITAR PEDIDO ======";
+
+        gotoXY(izqX, 8);
+        cout << "ID Pedido : ";
+
+        gotoXY(60 - 10, 22);
+        cout << "[ ESC para cancelar ]";
+
+        int idPedido;
+
+        gotoXY(inputX, 8);
+        if (!leerEntero(idPedido))
+            return;
+
+        Pedido* pedido = admin->buscarPedidoPorId(idPedido);
+        Usuario* u = admin->obtenerUsuario(pedido->getIdCliente());
+        if (pedido == nullptr) {
+            system("cls");
+            gotoXY(60 - 10, 14);
+            cout << "Pedido no encontrado.";
+            system("pause");
+            return;
+        }
+
+        system("cls");
+
+        gotoXY(60 - 12, 2);
+        cout << "====== EDITAR PEDIDO ======";
+
+        gotoXY(izqX, 5);
+        cout << "ID Pedido     : " << pedido->getIdPedido();
+
+        gotoXY(izqX, 6);
+        cout << "Cliente       : " << u->getNombre();
+
+        gotoXY(izqX, 7);
+        cout << "Peso actual   : " << pedido->getPeso();
+
+        gotoXY(izqX, 8);
+        cout << "Fecha actual  : " << pedido->getFechaEntrega();
+
+        gotoXY(izqX, 9);
+        cout << "Estado actual : " << estadoStr(pedido->getEstadoPedido());
+
+        gotoXY(izqX, 12);
+        cout << "Nuevo Peso    : ";
+
+        gotoXY(izqX, 14);
+        cout << "Nueva Fecha   : ";
+
+        gotoXY(izqX, 16);
+        cout << "Nuevo Estado  : ";
+
+        gotoXY(izqX, 17);
+        cout << "0. Entregado";
+
+        gotoXY(izqX, 18);
+        cout << "1. Pendiente de Entrega";
+
+        gotoXY(izqX, 19);
+        cout << "2. Cancelado";
+
+        double peso;
+        string fecha;
+        int opcionEstado;
+
+        gotoXY(inputX, 12);
+        if (!leerDecimal(peso))
+            return;
+
+        gotoXY(inputX, 14);
+        if (!leerCampo(fecha))
+            return;
+
+        gotoXY(inputX, 16);
+        if (!leerEntero(opcionEstado))
+            return;
+
+        EstadoPedido estado;
+
+        switch (opcionEstado) {
+        case 0:
+            estado = ENTREGADO;
+            break;
+        case 1:
+            estado = PENDIENTEDEENTREGA;
+            break;
+        case 2:
+            estado = CANCELADO;
+            break;
+        default:
+            system("cls");
+            gotoXY(60 - 8, 14);
+            cout << "Estado invalido.";
+            system("pause");
+            return;
+        }
+
+        pedido->setPeso(peso);
+        pedido->setFechaEntrega(fecha);
+        pedido->setEstadoPedido(estado);
+
+        admin->actualizarPedido(pedido->getIdPedido(), pedido->getPeso(), pedido->getEstadoPedido(), pedido->getFechaEntrega());
+
+        system("cls");
+        gotoXY(60 - 10, 14);
+        cout << "Pedido actualizado.";
+        system("pause");
+    }
+
+    static void mostrarTodo(AdministradorService* admin) {
+        Lista<Pedido*>* pedidos = admin->obtenerPedidos();
+        int n = pedidos ? pedidos->longitud() : 0;
+        system("cls");
+        for (int i = 0; i < n; i++) {
+            pedidos->obtenerPos(i)->mostrarDetallePedido();
+        }
+        system("pause");
+    }
+
+    static void menuEliminarPedidoPorId(AdministradorService* admin) {
+        system("cls");
+        cout << "\033[?25l";
+        gotoXY(60 - 10, 1);
+        cout << "====== Eliminar Pedido ======";
+        gotoXY(60 - 10, 19);
+        cout << "[ ESC para cancelar ]";
+        int id;
+        gotoXY(60 - 10, 3);
+
+        cout << "Pedido a Eliminar: ";
+
+        gotoXY(70, 3);  if (!leerEntero(id)) return;
+
+        bool estaBorrado = admin->borrarPedido(id);
+        if (estaBorrado) {
+            gotoXY(70, 4);
+            cout << "Pedido Eliminado Correctemente";
+        }
+        else {
+            gotoXY(70, 4);
+            cout << "El pedido no existe.";
+        }
+        system("pause > nul");
+        
+    }
+
 public:
     static void Render(Administrador* admin) {
         AdministradorService* uService = new AdministradorService();
@@ -494,9 +649,9 @@ public:
             case 4:  menuVerUsuarios(uService); break;
             case 5:  menuEditarUsuario(uService); break;
             case 6:  menuBorrarUsuario(uService); break;
-            case 7:  menuVerPedidos(uService); break;
-            case 8:
-            case 9:
+            case 7:  mostrarTodo(uService); break;
+            case 8:  editarPedido(uService); break;
+            case 9: menuEliminarPedidoPorId(uService); break;
                 system("cls");
                 gotoXY(60 - 10, 14);
                 cout << "Opcion en desarrollo.";

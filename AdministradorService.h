@@ -3,19 +3,36 @@
 #include "ProductoService.h"
 #include "UsuarioService.h"
 #include "Ordenamiento.h"
+#include "ArbolAVL.hpp"
 
 class AdministradorService {
 private:
 	PedidoService* pedidoService;
 	ProductoService* productoService;
 	UsuarioService* usuarioService;
+	ArbolAVL<Pedido*>* pedidosArbol;
 
+
+	static void imprimir(Pedido *p) {
+		cout << "ID: " << p->getIdPedido() << " - Cliente: " << p->getIdCliente() << "\n";
+	}
+
+	static void procesarAltura(int) {
+
+	}
 
 public:
 	AdministradorService () {
 		this->pedidoService = new PedidoService();
 		this->productoService = new ProductoService();
 		this->usuarioService = new UsuarioService();
+		pedidosArbol = new ArbolAVL<Pedido*>(imprimir, [](Pedido* a, Pedido* b) -> int {
+			if (a->getIdPedido() < b->getIdPedido()) return -1;
+			if (a->getIdPedido() > b->getIdPedido()) return 1;
+			return 0;
+		});
+
+		incializarArbolAVl();
 	}
 
 	~AdministradorService () {
@@ -24,10 +41,19 @@ public:
 
 	void inicializarTodosLosProductos() { productoService->iniciaizarProductos(); }
 
+	void incializarArbolAVl() {
+		Lista<Pedido*>* listaPedidos = pedidoService->obtenerPedidosHistoricos();
+		int nPedidos = listaPedidos->longitud();
+		for (int i = 0; i < nPedidos; i++) {
+			Pedido *p = listaPedidos->obtenerPos(i);
+			pedidosArbol->Insertar(p);
+		}
+	}
 
-	Lista<Pedido*>*   obtenerPedidos()             { return pedidoService->obtenerPedidosHistoricos(); }
-	Lista<Usuario*>*  obtenerUsuarios()            { return usuarioService->obtenerTodos(); }
-	Lista<Producto*>* obtenerTodosLosProductos()   { return productoService->obtenerPorductosPorCondicion(0, [](Producto* p) { return true; }); }
+	Usuario* obtenerUsuario(int id) { return usuarioService->buscarPorID(id); }
+	Lista<Pedido*>*   obtenerPedidos() { return pedidoService->obtenerPedidosHistoricos(); }
+	Lista<Usuario*>*  obtenerUsuarios() { return usuarioService->obtenerTodos(); }
+	Lista<Producto*>* obtenerTodosLosProductos() { return productoService->obtenerPorductosPorCondicion(0, [](Producto* p) { return true; }); }
 
 	void mostrarTodosLosProductos() {
 		productoService->mostrarInventario();
@@ -109,7 +135,6 @@ public:
 			else {
 				cout << "No hay pedidos"<<endl;
 			}
-
 		}
 	}
 
@@ -165,5 +190,51 @@ public:
 			}
 		}
 		cout << "\nNo se encontro el producto.\n";
+	}
+
+	Pedido* buscarPedidoPorId(int id) {
+		Pedido* ptemporal = new Pedido(id);
+		Pedido** resultado = pedidosArbol->Buscar(ptemporal);
+		delete ptemporal;
+		return (resultado != nullptr) ? *resultado : nullptr;
+	}
+
+	void matchArbolPedidos() {
+		Lista<Pedido*>* pedidosDeArbol = new Lista<Pedido*>();
+		std::vector<Pedido*> pedidos = pedidosArbol->ObtenerElementos();
+		for (Pedido* e : pedidos) {
+			pedidosDeArbol->agregaInicial(e);
+		}
+		pedidoService->setPedidos(pedidosDeArbol);
+		pedidoService->GuardarTodoLosPedidosEnArchivo();
+	}
+
+	bool borrarPedido(int id) {
+		Pedido* pTemporal = new Pedido(id);
+		bool es_borrado = pedidosArbol->Eliminar(pTemporal);
+		delete pTemporal;
+
+		if (es_borrado) {
+			matchArbolPedidos();
+		}
+
+		return es_borrado;
+	}
+
+	bool actualizarPedido(int id, double nuevoPeso,EstadoPedido nuevoEstado, string nuevaFecha) {
+		Pedido* p = buscarPedidoPorId(id);
+		if (p == nullptr) {
+			cout << "\nError: Pedido no encontrado.\n";
+			return false;
+		}
+
+		// idPedido NO cambia (es la clave de orden del AVL), solo se modifican los demás campos
+		p->setPeso(nuevoPeso);
+		p->setEstadoPedido(nuevoEstado);
+		p->setFechaEntrega(nuevaFecha);
+
+		matchArbolPedidos(); // reconstruye la lista desde el árbol y persiste TODO el archivo de una vez
+		cout << "\nPedido actualizado con exito.\n";
+		return true;
 	}
 };
